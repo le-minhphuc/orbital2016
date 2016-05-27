@@ -1,0 +1,11 @@
+<h1>Find spots to mug in {{ place }}:</h1>
+<p>
+	<ul>
+	{% for place in list_places %}
+		<li><a href="{% url 'mugspot:index' place.id %}">{{ place.spot_name }}</a>: {{ place.capacity }} seats,
+			{{ place.detail_lvl }} detail, {{ place.occupied }} seats occupied.
+		</li>
+	{% endfor %}
+	</ul>
+</p>
+
