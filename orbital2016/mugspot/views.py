@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 # Create your views here.
 from .models import MugSpot, Person
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, UserLoginForm
 
 def index(request, place_id=0):
 	# Need to add the feature check if the user is logged in here
@@ -44,3 +44,12 @@ def register(request):
 		user_form = UserRegisterForm()
 
 	return render(request, 'mugspot/register.html', {'user_form': user_form})
+
+def login(request):
+	if request.method == 'POST':
+		# create a form instance and populate it with data from the request
+		login_form = UserLoginForm(request.POST)
+		# check whether it's valid
+		if login_form.is_valid():
+			get_email = Person.objects.filter(user_email=login_form.cleaned_data['user_email'])
+			
