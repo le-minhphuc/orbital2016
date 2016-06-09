@@ -1,0 +1,13 @@
+body{
+	.pie {
+		width: 100 px; height: 100 px;
+		border-radius: 50%;
+		background: yellow;
+	}
+}
+
+pie {
+	width: 100 px; height: 100 px;
+	border-radius: 50%;
+	background: yellow;
+}

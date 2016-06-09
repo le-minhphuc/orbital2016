@@ -6,4 +6,5 @@ app_name = 'mugspot'
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
 	url(r'^(?P<place_id>[0-9]+)/$', views.index, name='index'),
+	url(r'^register/$', views.register, name='register'),
 ]

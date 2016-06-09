@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import MugSpot
+from .models import MugSpot, Person
 
 class MugSpotAdmin(admin.ModelAdmin):
 	def save_model(self,request,obj,form,change):
@@ -28,3 +28,4 @@ class MugSpotAdmin(admin.ModelAdmin):
 					ls_element.save()
 
 admin.site.register(MugSpot, MugSpotAdmin)
+admin.site.register(Person)

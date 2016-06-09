@@ -16,3 +16,12 @@ class MugSpot(models.Model):
 	detail_lvl = models.IntegerField(default=0)
 	def __str__(self):
 		return self.spot_name
+
+class Person(models.Model):
+	friends = models.ManyToManyField("self", null=True, blank=True)
+	username = models.CharField(max_length=200)
+	user_email = models.EmailField(max_length=254)
+	user_faculty = models.CharField(max_length=200)
+	user_password = models.CharField(max_length=200)
+	def __str__(self):
+		return self.username
