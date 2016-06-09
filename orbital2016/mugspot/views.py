@@ -52,4 +52,8 @@ def login(request):
 		# check whether it's valid
 		if login_form.is_valid():
 			get_email = Person.objects.filter(user_email=login_form.cleaned_data['user_email'])
-			
+			if len(get_email) == 0:
+				pass
+			else:
+				# declare the user to be logging in
+				# take the user to the homepage
