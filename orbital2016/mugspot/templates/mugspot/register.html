@@ -1,5 +1,30 @@
 <form action="{% url 'mugspot:register' %}" method="post">
 	{% csrf_token %}
-	{{ user_form }}
-	<input type="submit" value="Submit" />
+	{{ user_form.non_field_errors }}
+	<div class="fieldWrapper">
+		{{ user_form.username.errors }}
+		<label for="{{ user_form.username.id_for_label }}">Username:</label>
+		{{ user_form.username }}
+	</div>
+	<div class="fieldWrapper">
+		{{ user_form.user_email.errors }}
+		<label for="{{ user_form.user_email.id_for_label }}">User Email:</label>
+		{{ user_form.user_email }}
+	</div>
+	<div class="fieldWrapper">
+		{{ user_form.user_faculty.errors }}
+		<label for="{{ user_form.user_faculty.id_for_label }}">Faculty:</label>
+		{{ user_form.user_faculty }}
+	</div>
+	<div class="fieldWrapper">
+		{{ user_form.user_password.errors }}
+		<label for="{{ user_form.user_password.id_for_label }}">Password:</label>
+		{{ user_form.user_password }}
+	</div>
+	<div class="fieldWrapper">
+		{{ user_form.user_password_re.errors }}
+		<label for="{{ user_form.user_password_re.id_for_label }}">Retype Password:</label>
+		{{ user_form.user_password_re }}
+	</div>
+	<p><input type="submit" value="Submit" /></p>
 </form>
