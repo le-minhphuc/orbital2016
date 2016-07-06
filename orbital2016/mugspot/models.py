@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class MugSpot(models.Model):
@@ -18,10 +18,12 @@ class MugSpot(models.Model):
 		return self.spot_name
 
 class Person(models.Model):
-	friends = models.ManyToManyField('self', blank=True)
-	username = models.CharField(max_length=200)
-	user_email = models.EmailField(max_length=254, primary_key=True, unique=True)	
-	user_faculty = models.CharField(max_length=200)
-	user_password = models.CharField(max_length=200)
+	user = models.OneToOneField(User,
+							on_delete=models.CASCADE,
+							primary_key=True,
+							default=None,
+							)
+	friends = models.ManyToManyField('self', blank=True, default=None)
+	faculty = models.CharField(max_length=200, default=None)
 	def __str__(self):
-		return self.username
+		return self.user.username

@@ -13,22 +13,7 @@
 		{% load staticfiles %}
 
 		<link rel="stylesheet" type="text/css" href="{% static 'mugspot/style.css' %}" />
-
-		<nav class="navbar navbar-light bg-faded">
-			<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="180" height="70" alt="Logo"></a> <!-- Can I use a picture here? -->
-			<ul class="nav navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="{% url 'mugspot:index' %}">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'mugspot:index' %}">About</a> <!-- Why can we get rid of the span thingy above? -->
-				</li>
-			</ul>
-		</nav>
-
-		<div class="container-fluid">
-			<h1>Find spots to mug in {{ place }}:</h1>
-		</div>
+		<h1>Find spots to mug in {{ place }}:</h1>
 		<p>
 			<ul>
 			{% for place in list_places %}
@@ -39,10 +24,17 @@
 			</ul>
 		</p>
 
+		<p>
+			Jio Your Friends (Every friend will receive a message that tells them you are at which location)
+		</p>
+
+		<p>
+			<a href="{% url 'mugspot:logout' %}">Logout</a>
+		</p>
+
 		<!--jQuery first, then Bootstrap JS. -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 	</body>
 </html>
-
 

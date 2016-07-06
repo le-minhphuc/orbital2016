@@ -22,5 +22,5 @@ class UserRegisterForm(forms.Form):
 		return self.cleaned_data # Why does this work????
 
 class UserLoginForm(forms.Form):
-	user_email = forms.EmailField(label='Email', max_length=254)
+	user_name = forms.CharField(label='Name', max_length=254)
 	user_password = forms.CharField(label='Password', widget=forms.PasswordInput(), max_length=200)

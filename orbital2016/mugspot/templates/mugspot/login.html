@@ -1,4 +1,15 @@
 <form action="{% url 'mugspot:login' %}" method="post">
 	{% csrf_token %}
-	
+	{{ user_form.non_field_errors }}
+	<div class="fieldWrapper">
+		{{ user_form.user_name.errors }}
+		<label for="{{ user_form.user_name.id_for_label }}">User Name:</label>
+		{{ user_form.user_name }}
+	</div>
+	<div class="fieldWrapper">
+		{{ user_form.user_password.errors }}
+		<label for="{{ user_form.user_password.id_for_label }}">Password:</label>
+		{{ user_form.user_password }}
+	</div>
+	<p><input type="submit" value="Submit" /></p>	
 </form>
