@@ -14,6 +14,10 @@ class MugSpot(models.Model):
 	capacity = models.IntegerField(default=0)
 	occupied = models.IntegerField(default=0)
 	detail_lvl = models.IntegerField(default=0)
+	lat_lmt_min = models.FloatField(default=0)
+	lat_lmt_max = models.FloatField(default=0)
+	lng_lmt_min = models.FloatField(default=0)
+	lng_lmt_max = models.FloatField(default=0)
 	def __str__(self):
 		return self.spot_name
 
@@ -27,3 +31,12 @@ class Person(models.Model):
 	faculty = models.CharField(max_length=200, default=None)
 	def __str__(self):
 		return self.user.username
+
+class Position(models.Model):
+	user = models.OneToOneField(User,
+		on_delete=models.CASCADE,
+		primary_key=True,
+		default=None,
+		)
+	latitude = models.FloatField(default=0)
+	longitude = models.FloatField(default=0)

@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+import json
 # Create your views here.
 from .models import MugSpot, Person
 from .forms import UserRegisterForm, UserLoginForm
@@ -94,3 +95,10 @@ def login_view(request):
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('mugspot:index'))
+
+"""
+def update_location_view(request):
+	lat_lng = request.GET.get('ptn_data')
+
+"""
+	

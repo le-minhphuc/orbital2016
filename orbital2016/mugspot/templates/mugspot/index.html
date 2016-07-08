@@ -3,17 +3,17 @@
 	<head>
 		<!--Required meta tags always come first-->
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
-
+		<style>
+		  #map {
+		    height: 800px;
+		  }
+		</style>
 		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
 	</head>
 	<body>
 		{% load staticfiles %}
-
-		<link rel="stylesheet" type="text/css" href="{% static 'mugspot/style.css' %}" />
-
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="180" height="70" alt="Logo"></a> <!-- Can I use a picture here? -->
 			<ul class="nav navbar-nav">
@@ -38,10 +38,40 @@
 			{% endfor %}
 			</ul>
 		</p>
+		<div id="map"></div>
+		<script>
+		var map;
+		function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: {lat: 1.306, lng: 103.773},
+				zoom: 18,
+			});
 
+			function geo_success(position) {
+			  var latitude = position.coords.latitude;
+			  var longitude = position.coords.longitude;
+			  var marker_2 = new google.maps.Marker({
+			    position: {lat: latitude, lng: longitude},
+			    map: map,
+			    title: 'Phuc',
+			  });
+			}
+
+			function geo_error() {
+			  alert("Sorry, no position available.");
+			}
+
+			var geo_options = {
+			  enableHighAccuracy: true,
+			  timeout: 27000,
+			};
+
+			navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
+		}
+		</script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
+		    async defer></script>
 		<!--jQuery first, then Bootstrap JS. -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 	</body>
 </html>
 
