@@ -23,6 +23,18 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'mugspot:index' %}">About</a> <!-- Why can we get rid of the span thingy above? -->
 				</li>
+				{% if user_indicator == 1 %}
+				<li class="nav-item">
+					Welcome, {{ username }}!
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'mugspot:logout' %}">Logout</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'mugspot:register' %}">Register</a>/<a class="nav-link" href="{% url 'mugspot:login' %}">Login</a>
+				</li>
+				{% endif %}
 			</ul>
 		</nav>
 
@@ -41,6 +53,7 @@
 		<div id="map"></div>
 		<script>
 		var map;
+		var indicator = 0;
 		function initMap() {
 			map = new google.maps.Map(document.getElementById('map'), {
 				center: {lat: 1.306, lng: 103.773},
@@ -55,6 +68,34 @@
 			    map: map,
 			    title: 'Phuc',
 			  });
+			  if (indicator == 0) {
+			  	var xhr = new XMLHttpRequest();
+			  	var fd = new FormData();
+			  	fd.append('lat', latitude);
+			  	fd.append('lng', longitude);
+			  	xhr.open('POST', "{% url 'mugspot:update_location_view' %}", true);
+			  	function getCookie(name) {
+			  	    var cookieValue = null;
+			  	    if (document.cookie && document.cookie !== '') {
+			  	        var cookies = document.cookie.split(';');
+			  	        for (var i = 0; i < cookies.length; i++) {
+			  	            var cookie = jQuery.trim(cookies[i]);
+			  	            // Does this cookie string begin with the name we want?
+			  	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			  	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			  	                break;
+			  	            }
+			  	        }
+			  	    }
+			  	    return cookieValue;
+			  	}
+			  	var csrftoken = getCookie('csrftoken');
+			  	xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			  	xhr.send(fd);
+			  	if (xhr.responseText == "Success") {
+			  		indicator = 1;
+			  	}
+			  }
 			}
 
 			function geo_error() {
@@ -69,6 +110,7 @@
 			navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
 		}
 		</script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
 		    async defer></script>
 		<!--jQuery first, then Bootstrap JS. -->

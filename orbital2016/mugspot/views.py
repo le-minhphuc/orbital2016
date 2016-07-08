@@ -1,29 +1,39 @@
 from django.shortcuts import render
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import json
 # Create your views here.
-from .models import MugSpot, Person
+from .models import MugSpot, Person, Position
 from .forms import UserRegisterForm, UserLoginForm
 
 def index(request, place_id=0):
 	# Need to add the feature check if the user is logged in here
 	ancestor_place = MugSpot.objects.filter(id=place_id)
+	user_1 = request.user
+	user_indicator = 0
+	if (user_1.is_authenticated()):
+		user_indicator = 1
+	else:
+		user_indicator = 0
 	if (len(ancestor_place)>0):
 		list_places = MugSpot.objects.filter(ancestor_spot=ancestor_place[0]).order_by('-spot_name')
 		return render(request, 'mugspot/index.html', {
 				'list_places':list_places,
 				'place':ancestor_place[0].__str__,
+				'user_indicator': user_indicator,
+				'username': user_1.username,
 			})
 	else: 
 		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
 		return render(request, 'mugspot/index.html', {
 				'list_places':list_places,
 				'place':'NUS',
+				'user_indicator': user_indicator,
+				'username': user_1.username,
 			})
 
 @login_required(login_url='mugspot:login')
@@ -81,7 +91,7 @@ def login_view(request):
 			if user is not None:
 				if user.is_active:
 					login(request,user)
-					return HttpResponseRedirect(reverse('mugspot:loggedinindex'))
+					return HttpResponseRedirect(reverse('mugspot:index'))
 				else:
 					login_form = UserLoginForm()
 					return render(request, 'mugspot/login.html', {'user_form': login_form})
@@ -96,9 +106,10 @@ def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('mugspot:index'))
 
-"""
+@login_required(login_url='mugspot:login')
 def update_location_view(request):
-	lat_lng = request.GET.get('ptn_data')
+	pstn_1 = Position(user=request.user, latitude=request.POST.get('lat'), longitude=request.POST.get('lng'));
+	pstn_1.save()
+	return HttpResponse("Success", content_type="text/plain")
 
-"""
 	
