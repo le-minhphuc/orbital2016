@@ -3,6 +3,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import json
@@ -12,6 +13,17 @@ from .forms import UserRegisterForm, UserLoginForm
 
 def index(request, place_id=0):
 	# Need to add the feature check if the user is logged in here
+	def find_pos(usr):
+		place_indicator = True
+		user_pos = Position.objects.filter(user=usr)[0]
+		all_places = MugSpot.objects.all()
+		for place in all_places:
+			if (place.lat_lmt_min <= user_pos.latitude <= place.lat_lmt_max) and (place.lng_lmt_min <= user_pos.longitude <= place.lng_lmt_max):
+				return (place_indicator,place)
+			else:
+				pass
+		place_indicator = False
+		return (place_indicator,0)
 	ancestor_place = MugSpot.objects.filter(id=place_id)
 	user_1 = request.user
 	user_indicator = 0
@@ -19,6 +31,17 @@ def index(request, place_id=0):
 		user_indicator = 1
 	else:
 		user_indicator = 0
+	sessions = Session.objects.all().order_by('-expire_date')
+	sessions = sessions[:1]
+	live_update_list = []
+	for session in sessions:
+		data = session.get_decoded()
+		user_s = User.objects.filter(id=data['_auth_user_id'])[0]
+		res_find_pos = find_pos(user_s) #Determine the user's location to be within the mugspots or outside the mugspots
+		if res_find_pos[0]:
+			live_update_list.append([user_s,res_find_pos[1]])
+		else:
+			live_update_list.append([user_s,0])
 	if (len(ancestor_place)>0):
 		list_places = MugSpot.objects.filter(ancestor_spot=ancestor_place[0]).order_by('-spot_name')
 		return render(request, 'mugspot/index.html', {
@@ -26,6 +49,7 @@ def index(request, place_id=0):
 				'place':ancestor_place[0].__str__,
 				'user_indicator': user_indicator,
 				'username': user_1.username,
+				'live_update_list': live_update_list,
 			})
 	else: 
 		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
@@ -34,6 +58,7 @@ def index(request, place_id=0):
 				'place':'NUS',
 				'user_indicator': user_indicator,
 				'username': user_1.username,
+				'live_update_list': live_update_list,
 			})
 
 @login_required(login_url='mugspot:login')

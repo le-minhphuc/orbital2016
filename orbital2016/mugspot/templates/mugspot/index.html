@@ -50,6 +50,21 @@
 			{% endfor %}
 			</ul>
 		</p>
+		<div id="live_update"> <!--Live update list-->
+			<ul>
+			{% for live_update_element in live_update_list %}
+				{% if live_update_element.1 == 0 %}
+					<li>
+						{{ live_update_element.0.username }} just entered a new MugSpot!
+					</li>
+				{% else %}
+					<li>
+						{{ live_update_element.0.username }} just entered {{ live_update_element.1.spot_name }}!
+					</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+		</div>
 		<div id="map"></div>
 		<script>
 		var map;
