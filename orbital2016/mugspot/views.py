@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
@@ -12,10 +13,15 @@ from .models import MugSpot, Person, Position
 from .forms import UserRegisterForm, UserLoginForm
 
 def index(request, place_id=0):
-	# Need to add the feature check if the user is logged in here
+	if request.method == 'POST':
+		pstn_1 = Position(user=request.user, latitude=request.POST.get('lat'), longitude=request.POST.get('lng'));
+		pstn_1.save()
 	def find_pos(usr):
 		place_indicator = True
-		user_pos = Position.objects.filter(user=usr)[0]
+		user_pos = Position.objects.filter(user=usr)
+		if len(user_pos) == 0:
+			return "No position object yet"
+		user_pos = user_pos[0]
 		all_places = MugSpot.objects.all()
 		for place in all_places:
 			if (place.lat_lmt_min <= user_pos.latitude <= place.lat_lmt_max) and (place.lng_lmt_min <= user_pos.longitude <= place.lng_lmt_max):
@@ -25,23 +31,30 @@ def index(request, place_id=0):
 		place_indicator = False
 		return (place_indicator,0)
 	ancestor_place = MugSpot.objects.filter(id=place_id)
-	user_1 = request.user
-	user_indicator = 0
+	user_1 = request.user 
+	user_indicator = 0 # Used to check if the user is logged in 
 	if (user_1.is_authenticated()):
 		user_indicator = 1
 	else:
 		user_indicator = 0
 	sessions = Session.objects.all().order_by('-expire_date')
-	sessions = sessions[:1]
 	live_update_list = []
+	all_curr_users_p = []
+	all_curr_users = []
 	for session in sessions:
 		data = session.get_decoded()
 		user_s = User.objects.filter(id=data['_auth_user_id'])[0]
 		res_find_pos = find_pos(user_s) #Determine the user's location to be within the mugspots or outside the mugspots
-		if res_find_pos[0]:
-			live_update_list.append([user_s,res_find_pos[1]])
+		if res_find_pos == "No position object yet":
+			pass
 		else:
-			live_update_list.append([user_s,0])
+			if res_find_pos[0]:
+				live_update_list.append([user_s,res_find_pos[1]])
+			else:
+				live_update_list.append([user_s,0])
+			user_p = Position.objects.filter(user=user_s)[0]
+			all_curr_users_p.append(user_p)
+			all_curr_users.append(user_s.username)
 	if (len(ancestor_place)>0):
 		list_places = MugSpot.objects.filter(ancestor_spot=ancestor_place[0]).order_by('-spot_name')
 		return render(request, 'mugspot/index.html', {
@@ -50,6 +63,8 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
+				'all_curr_users': all_curr_users,
+				'all_curr_users_p': all_curr_users_p,
 			})
 	else: 
 		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
@@ -59,23 +74,8 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
-			})
-
-@login_required(login_url='mugspot:login')
-def logged_in_index(request, place_id=0):
-	# Need to add the feature check if the user is logged in here
-	ancestor_place = MugSpot.objects.filter(id=place_id)
-	if (len(ancestor_place)>0):
-		list_places = MugSpot.objects.filter(ancestor_spot=ancestor_place[0]).order_by('-spot_name')
-		return render(request, 'mugspot/loggedinindex.html', {
-				'list_places':list_places,
-				'place':ancestor_place[0].__str__,
-			})
-	else: 
-		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
-		return render(request, 'mugspot/loggedinindex.html', {
-				'list_places':list_places,
-				'place':'NUS',
+				'all_curr_users': all_curr_users,
+				'all_curr_users_p': all_curr_users_p,
 			})
 
 def register(request):
@@ -114,13 +114,13 @@ def login_view(request):
 			user = authenticate(username=login_form.cleaned_data['user_name'], 
 				password=login_form.cleaned_data['user_password'],)
 			if user is not None:
-				if user.is_active:
+				if user.is_active: # User is correct and active
 					login(request,user)
 					return HttpResponseRedirect(reverse('mugspot:index'))
-				else:
+				else: # User is correct but not active
 					login_form = UserLoginForm()
 					return render(request, 'mugspot/login.html', {'user_form': login_form})
-			else:
+			else: # Username/password is incorrect
 				login_form = UserLoginForm()
 				return render(request, 'mugspot/login.html', {'user_form': login_form})
 	else: #Create a blank login form
@@ -129,12 +129,11 @@ def login_view(request):
 
 def logout_view(request):
 	logout(request)
-	return HttpResponseRedirect(reverse('mugspot:index'))
+	return HttpResponseRedirect(reverse('mugspot:login'))
 
-@login_required(login_url='mugspot:login')
-def update_location_view(request):
-	pstn_1 = Position(user=request.user, latitude=request.POST.get('lat'), longitude=request.POST.get('lng'));
-	pstn_1.save()
-	return HttpResponse("Success", content_type="text/plain")
+def all_positions_view(request):
+	all_pos = Position.objects.all()
+	data = serializers.serialize("json", all_pos)
+	return HttpResponse(data, content_type='application/json')
 
 	
