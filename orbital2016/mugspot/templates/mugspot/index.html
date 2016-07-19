@@ -82,32 +82,29 @@
 			xhr_2.onreadystatechange = function() {
 				if (xhr_2.readyState == 4 && xhr_2.status == 200) {
 					var pos_arr = JSON.parse(xhr_2.responseText);
-					testPosition(pos_arr);
+					displayPosFunction(pos_arr);
 				}
 			};
 			xhr_2.open('GET', "{% url 'mugspot:position' %}", true);
 			xhr_2.send();
 			var marker_2;
+			var image = {
+				url: "{% static 'mugspot/red_dot_2.png' %}",
+				size: new google.maps.Size(30,30),
+				origin: new google.maps.Point(0,0),
+				anchor: new google.maps.Point(10,10), 
+			}
 
 			function displayPosFunction(posarr) {
 				var i;
 				for (i=0; i < posarr.length; i++) {
 					marker_2 = new google.maps.Marker({
-						position: {lat: parseFloat(posarr[i].latitude), lng: parseFloat(posarr[i].longitude)},
+						position: {lat: posarr[i].fields.latitude, lng: posarr[i].fields.longitude},
 						map: map,
 						title: "hehe",
+						icon: image,
 					});
 				}
-			}
-
-			function testPosition(posarr) {
-				var i;
-				var out = "<ol>";
-				for (i = 0; i < posarr.length; i++) {
-					out += "<li>Latitude " + posarr[i].user + " Longitude " + posarr[i].longitude + "</li>";
-				}
-				out += "</ol>";
-				document.getElementById("id01").innerHTML = out;
 			}
 
 			function geo_success(position) {
