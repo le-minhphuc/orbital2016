@@ -3,71 +3,154 @@
 	<head>
 		<!--Required meta tags always come first-->
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title> Home</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<style>
-		  #map {
+		#map {
 		    height: 800px;
-		  }
+		}
+		.navbar-fixed-top {
+    		min-height: 90px;
+		}
+		#nav, #nav-inner, .nav-list, .nav-list-item a {
+			color: #fffff0;
+		}
+		.navbar-nav > li > a > {
+    		padding-top: 0px;
+    		padding-bottom: 0px;
+    		line-height: 90px;
+    		font-color: white;
+    		font-size: 40px;
+    		margin-left: 50px;
+   			margin-right: 50px;
+		}
+		.bottom-default {
+    		position: fixed;
+    		bottom: 10px;
+    		font-size: 10px;
+    		color: white;
+    		width: 100%;
+		}
+		.encourage{
+    		position: fixed;
+    		bottom: 40px;
+    		font-size: 23px;
+    		color: white;
+    		width: 100%;
+
+		}
+		input[type=text] {
+    		width: 170px;
+    		border: 0;
+    		font-size: 13px;
+    		background-color: white;
+    		padding: 2px 10px 2px 10px;
+            -webkit-transition: width 0.4s ease-in-out;
+    		transition: width 0.4s ease-in-out;
+    		margin-left:15px; 
+    		margin-right:25px; 
+		}
+		a {
+			color: #4494E8  ;
+		}
+		body {
+      		background-color:#3683D5;
+      		width: 100%;
+      		height: 100%;
+			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+			overflow: scroll;
+			color: white;
+    	}
+    	ul{
+  			list-style:none;
+		}
+
+		ul li{
+  			float:left;
+  			width:117%;
+  			padding:10px;
+  			margin-left: -40px;
+  			margin-right: 40px;
+  			text-align: center;
+		}
+
+		ul li:nth-child(2n){
+  			background-color:#F99027;
+		}
+
+		ul li:nth-child(2n+1){
+  			clear:both;
+  			background-color:#333333;
+		}
 		</style>
 		<!-- Bootstrap CSS -->
 	</head>
 	<body>
 		{% load staticfiles %}
-		<nav class="navbar navbar-light bg-faded">
-			<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="180" height="70" alt="Logo"></a> <!-- Can I use a picture here? -->
-			<ul class="nav navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="{% url 'mugspot:index' %}">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'mugspot:index' %}">About</a> <!-- Why can we get rid of the span thingy above? -->
-				</li>
-				{% if user_indicator == 1 %}
-				<li class="nav-item">
-					Welcome, {{ username }}!
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'mugspot:logout' %}">Logout</a>
-				</li>
-				{% else %}
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'mugspot:register' %}">Register</a>/<a class="nav-link" href="{% url 'mugspot:login' %}">Login</a>
-				</li>
-				{% endif %}
-			</ul>
+		<nav class="navbar navbar-inverse">
+	  		<div class="container-fluid">
+    			<div class="navbar-header">	
+					<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="150" height="45" style="position: relative; top:-10px; "  alt="Logo"></a> 
+				</div>
+    			<div class="nav navbar-nav">
+      				<li class="nav-item active"><a class="nav-link"c href = "{% url 'mugspot:index' %}">HOME</a></li>
+      				<li class="nav-item"><a class="nav-link" href="{% url 'mugspot:about' %}"> ABOUT </a></li>
+    			</div>
+    			{% if user_indicator == 1 %}
+    			<div class="nav navbar-nav navbar-right">
+      				<li class="nav-item"> WELCOME, {{ username }}! </li>
+      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:logout' %}"> LOGOUT</a> </li>
+      			</div>
+      			{% else %}
+    			<div class="nav navbar-nav navbar-right">
+      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:register' %}" > REGISTER</a> </li>
+      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:login' %}"> LOGIN</a> </li>
+      			</div>
+      			{% endif %}
+  			</div>
 		</nav>
-
 		<div class="container-fluid">
-			<h1>Find spots to mug in {{ place }}:</h1>
-		</div>
-		<p>
-			<ul>
-			{% for place in list_places %}
-				<li><a href="{% url 'mugspot:index' place.id %}">{{ place.spot_name }}</a>: {{ place.capacity }} seats,
-					{{ place.detail_lvl }} detail, {{ place.occupied }} seats occupied.
-				</li>
-			{% endfor %}
-			</ul>
-		</p>
-		<div id="live_update"> <!--Live update list-->
-			<ul>
-			{% for live_update_element in live_update_list %}
-				{% if live_update_element.1 == 0 %}
-					<li>
-						{{ live_update_element.0.username }} just entered a new MugSpot!
-					</li>
-				{% else %}
-					<li>
-						{{ live_update_element.0.username }} just entered {{ live_update_element.1.spot_name }}!
-					</li>
+			<div class = "col-md-3">
+			   	<p style="font-size:23px; text-align: center;"> Live Update </p>
+				<div id="live_update"> <!--Live update list-->
+					<ul>
+					{% for live_update_element in live_update_list %}
+					{% if live_update_element.1 == 0 %}
+						<li>
+							{{ live_update_element.0.username }} just entered a new MugSpot!
+						</li>
+						{% else %}
+						<li>
+							{{ live_update_element.0.username }} just entered {{ live_update_element.1.spot_name }}!
+						</li>
+						{% endif %}
+					{% endfor %}
+					</ul>
+				</div>
+				{% if user_indicator == 1 %}
+				<div class="encourage"> Jio your Friends! </div>
 				{% endif %}
-			{% endfor %}
-			</ul>
-		</div>
+			   	<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
 
-		<div id="id01">
-		</div>
+			</div>
+
+			<div class = "col-md-9">
+				<div class="row-md-3" style="overflow-x: scroll; overflow-y: scroll;background-color: #333333;">
+					<p style="font-size:23px; text-align: center; "> Mugging spots in {{ place }}</p>
+					<ul>
+						{% for place in list_places %}
+						<a href="{% url 'mugspot:index' place.id %}">{{ place.spot_name }}</a> <i class= "glyphicon glyphicon-option-vertical"> </i>
+						{% endfor %}
+					</ul>
+				</div>
+				<div class="row-md-9" style="overflow: scroll">
+					<div id="id01">
+					</div>
 
 		<div id="map"></div>
 		<script>
@@ -147,6 +230,8 @@
 			navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
 		}
 		</script>
+		</div>
+		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
 		    async defer></script>

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import render_to_response
 from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.core import serializers
@@ -77,6 +78,8 @@ def index(request, place_id=0):
 				'all_curr_users': all_curr_users,
 				'all_curr_users_p': all_curr_users_p,
 			})
+def about(request, place_id=0):
+ 	return render_to_response('mugspot/about.html')
 
 def register(request):
 	# if this is a POST request we need to process the form data
