@@ -10,13 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import json
 # Create your views here.
-from .models import MugSpot, Person, Position
+from .models import MugSpot, Person, Position, LiveUpdate
 from .forms import UserRegisterForm, UserLoginForm
 
 def index(request, place_id=0):
-	if request.method == 'POST':
-		pstn_1 = Position(user=request.user, latitude=request.POST.get('lat'), longitude=request.POST.get('lng'));
-		pstn_1.save()
 	def find_pos(usr):
 		place_indicator = True
 		user_pos = Position.objects.filter(user=usr)
@@ -31,6 +28,23 @@ def index(request, place_id=0):
 				pass
 		place_indicator = False
 		return (place_indicator,0)
+
+	if request.method == 'POST':
+		pstn_1 = Position(user=request.user, latitude=request.POST.get('lat'), longitude=request.POST.get('lng'));
+		pstn_1.save() #Add the newly created position object into the liveudpate list
+		all_updates = LiveUpdate.objects.all().order_by('date_time')
+		if (len(all_updates) == 10):
+			all_updates[0].delete()
+			new_liveupdate = LiveUpdate(username=pstn_1.user.username)
+			if find_pos(pstn_1.user)[0]:
+				new_liveupdate.place = find_pos(pstn_1.user)[1]
+			new_liveupdate.save()
+		else:
+			new_liveupdate = LiveUpdate(username=pstn_1.user.username)
+			if find_pos(pstn_1.user)[0]:
+				new_liveupdate.place = find_pos(pstn_1.user)[1]
+			new_liveupdate.save()
+
 	ancestor_place = MugSpot.objects.filter(id=place_id)
 	user_1 = request.user 
 	user_indicator = 0 # Used to check if the user is logged in 
@@ -39,7 +53,8 @@ def index(request, place_id=0):
 	else:
 		user_indicator = 0
 	sessions = Session.objects.all().order_by('-expire_date')
-	live_update_list = []
+	live_update_list = LiveUpdate.objects.all().order_by('date_time')
+	"""
 	all_curr_users_p = []
 	all_curr_users = []
 	for session in sessions:
@@ -49,13 +64,10 @@ def index(request, place_id=0):
 		if res_find_pos == "No position object yet":
 			pass
 		else:
-			if res_find_pos[0]:
-				live_update_list.append([user_s,res_find_pos[1]])
-			else:
-				live_update_list.append([user_s,0])
 			user_p = Position.objects.filter(user=user_s)[0]
 			all_curr_users_p.append(user_p)
 			all_curr_users.append(user_s.username)
+			"""
 	if (len(ancestor_place)>0):
 		list_places = MugSpot.objects.filter(ancestor_spot=ancestor_place[0]).order_by('-spot_name')
 		return render(request, 'mugspot/index.html', {
@@ -64,8 +76,6 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
-				'all_curr_users': all_curr_users,
-				'all_curr_users_p': all_curr_users_p,
 			})
 	else: 
 		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
@@ -75,8 +85,6 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
-				'all_curr_users': all_curr_users,
-				'all_curr_users_p': all_curr_users_p,
 			})
 def about(request, place_id=0):
  	return render_to_response('mugspot/about.html')
@@ -138,5 +146,20 @@ def all_positions_view(request):
 	all_pos = Position.objects.all()
 	data = serializers.serialize("json", all_pos)
 	return HttpResponse(data, content_type='application/json')
+
+def check_login_js_view(request):
+	user_1 = request.user
+	indicator = 0
+	if (user_1.is_authenticated()):
+		all_pos = Position.objects.all()
+		for position in all_pos:
+			if position.user.username == user_1.username:
+				indicator = 2
+				break
+			indicator = 1
+	else: 
+		pass
+	response = JsonResponse({'indicator': indicator})
+	return response
 
 	

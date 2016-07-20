@@ -11,4 +11,5 @@ urlpatterns = [
 	url(r'^login/$', views.login_view, name='login'),
 	url(r'^logout/$', views.logout_view, name='logout'),
 	url(r'^allpos/$', views.all_positions_view, name='position'),
+	url(r'^checklginjs/$', views.check_login_js_view, name='checklginjs'),
 ]

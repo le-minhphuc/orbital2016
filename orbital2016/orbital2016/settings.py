@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -52,6 +53,10 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'orbital2016.urls'
+
+CRONJOBS = [
+    ('*/1 * * * *', 'orbital2016.cron.scheduled_position_check')
+]
 
 TEMPLATES = [
     {

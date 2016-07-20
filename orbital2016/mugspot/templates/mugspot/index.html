@@ -120,13 +120,21 @@
 				<div id="live_update"> <!--Live update list-->
 					<ul>
 					{% for live_update_element in live_update_list %}
-					{% if live_update_element.1 == 0 %}
+						{% if live_update_element.place == null and live_update_element.status == True %}
 						<li>
-							{{ live_update_element.0.username }} just entered a new MugSpot!
+							{{ live_update_element.username }} just entered a new MugSpot!
+						</li>
+						{% elif live_update_element.place == null and live_update_element.status != True %}
+						<li>
+							{{ live_update_element.username }} just left a new MugSpot!
+						</li>
+						{% elif live_update_element.place != null and live_update_element.status != True %}
+						<li>
+							{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
 						</li>
 						{% else %}
 						<li>
-							{{ live_update_element.0.username }} just entered {{ live_update_element.1.spot_name }}!
+							{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
 						</li>
 						{% endif %}
 					{% endfor %}
@@ -227,7 +235,25 @@
 			  timeout: 27000,
 			};
 
-			navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
+			var check_login = new XMLHttpRequest();
+			check_login.onreadystatechange = function() {
+				if (check_login.readyState == 4 && check_login.status == 200) {
+					var login_indicator = JSON.parse(check_login.responseText);
+					obtain_position(login_indicator.indicator);
+				}
+			}
+			check_login.open('GET', "{% url 'mugspot:checklginjs' %}", true);
+			check_login.send();
+
+			function test_function_2(indicator) {
+				console.log(indicator);
+			}
+
+			function obtain_position(indicator) {
+				if (indicator == 1) {
+					navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
+				} 
+			}
 		}
 		</script>
 		</div>

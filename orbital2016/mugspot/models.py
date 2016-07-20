@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
 class MugSpot(models.Model):
@@ -40,3 +42,15 @@ class Position(models.Model):
 		)
 	latitude = models.FloatField(default=0)
 	longitude = models.FloatField(default=0)
+	date_time = models.DateTimeField(default=timezone.now)
+	duration = models.DurationField(default=timedelta(hours=1))
+
+class LiveUpdate(models.Model):
+	username = models.CharField(max_length=200, default="")
+	status = models.BooleanField(default=True)
+	date_time = models.DateTimeField(default=timezone.now)
+	place = models.OneToOneField(MugSpot,
+		on_delete=models.CASCADE,
+		blank=True,
+		null=True,
+		)

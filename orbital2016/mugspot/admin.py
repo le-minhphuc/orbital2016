@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import MugSpot, Person, Position
+from .models import MugSpot, Person, Position, LiveUpdate
 
 class MugSpotAdmin(admin.ModelAdmin):
 	def save_model(self,request,obj,form,change):
@@ -30,3 +30,4 @@ class MugSpotAdmin(admin.ModelAdmin):
 admin.site.register(MugSpot, MugSpotAdmin)
 admin.site.register(Person)
 admin.site.register(Position)
+admin.site.register(LiveUpdate)
