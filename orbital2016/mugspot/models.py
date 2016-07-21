@@ -54,3 +54,37 @@ class LiveUpdate(models.Model):
 		blank=True,
 		null=True,
 		)
+
+class FriendUpdate(models.Model):
+	sender = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+		default=None,
+		related_name='+',
+		)
+	receiver = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+		default=None,
+		related_name='+',
+		)
+	status = models.BooleanField(default=True)
+	date_time = models.DateTimeField(default=timezone.now)
+	mug_spot = models.CharField(default="", max_length=200)
+
+class FriendRequest(models.Model):
+	sender = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+		default=None,
+		related_name='+',
+		)
+	receiver = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+		default=None,
+		related_name='+',
+		)
+	sender_consent = models.BooleanField(default=False)
+	receiver_consent = models.BooleanField(default=False)
+	date_time = models.DateTimeField(default=timezone.now)

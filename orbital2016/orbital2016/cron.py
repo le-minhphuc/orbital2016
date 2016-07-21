@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import MugSpot, Person, Position, LiveUpdate
+from mugspot.models import MugSpot, Person, Position, LiveUpdate
 from django.utils import timezone
 from datetime import timedelta
 

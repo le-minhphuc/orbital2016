@@ -140,121 +140,113 @@
 					{% endfor %}
 					</ul>
 				</div>
-				{% if user_indicator == 1 %}
-				<div class="encourage"> Jio your Friends! </div>
-				{% endif %}
-			   	<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
 
-			</div>
-
-			<div class = "col-md-9">
-				<div class="row-md-3" style="overflow-x: scroll; overflow-y: scroll;background-color: #333333;">
-					<p style="font-size:23px; text-align: center; "> Mugging spots in {{ place }}</p>
+				<div id="friend_update"> <!-- List of all friends updates on locations -->
 					<ul>
-						{% for place in list_places %}
-						<a href="{% url 'mugspot:index' place.id %}">{{ place.spot_name }}</a> <i class= "glyphicon glyphicon-option-vertical"> </i>
+						{% for friend_update in friend_update_list %}
+							{% if friend_update.mug_spot == "" and friend_update.status == True %}
+							<li>
+								{{ friend_update.sender.username }} just entered a new Mug Spot!
+							</li>
+							{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+							<li>
+								{{ friend_update.sender.username }} just left a new Mug Spot!
+							</li>
+							{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+							<li>
+								{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+							</li>
+							{% else %}
+							<li>
+								{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+							</li>
+							{% endif %}
 						{% endfor %}
 					</ul>
 				</div>
-				<div class="row-md-9" style="overflow: scroll">
 
-		<div id="map"></div>
-		<script>
-		var map;
-		function initMap() {
-			map = new google.maps.Map(document.getElementById('map'), {
-				center: {lat: 1.306, lng: 103.773},
-				zoom: 18,
-			});
+			   	<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
 
-			var xhr_2 = new XMLHttpRequest();
-			xhr_2.onreadystatechange = function() {
-				if (xhr_2.readyState == 4 && xhr_2.status == 200) {
-					var pos_arr = JSON.parse(xhr_2.responseText);
-					displayPosFunction(pos_arr);
-				}
-			};
-			xhr_2.open('GET', "{% url 'mugspot:position' %}", true);
-			xhr_2.send();
-			var marker_2;
-			var image = {
-				url: "{% static 'mugspot/red_dot_2.png' %}",
-				size: new google.maps.Size(30,30),
-				origin: new google.maps.Point(0,0),
-				anchor: new google.maps.Point(10,10), 
-			}
-
-			function displayPosFunction(posarr) {
-				var i;
-				for (i=0; i < posarr.length; i++) {
-					marker_2 = new google.maps.Marker({
-						position: {lat: posarr[i].fields.latitude, lng: posarr[i].fields.longitude},
-						map: map,
-						title: "hehe",
-						icon: image,
-					});
-				}
-			}
-
-			function geo_success(position) {
-			  var latitude = position.coords.latitude;
-			  var longitude = position.coords.longitude;
-			  var xhr = new XMLHttpRequest();
-			  var fd = new FormData();
-			  fd.append('lat', latitude);
-			  fd.append('lng', longitude);
-			  xhr.open('POST', "{% url 'mugspot:index' %}", true);
-			  function getCookie(name) {
-			      var cookieValue = null;
-			      if (document.cookie && document.cookie !== '') {
-			          var cookies = document.cookie.split(';');
-			          for (var i = 0; i < cookies.length; i++) {
-			              var cookie = jQuery.trim(cookies[i]);
-			              // Does this cookie string begin with the name we want?
-			              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                  break;
-			              }
-			          }
-			      }
-			      return cookieValue;
-			  }
-			  var csrftoken = getCookie('csrftoken');
-			  xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			  xhr.send(fd);
-			}
-
-			function geo_error() {
-			  alert("Sorry, no position available.");
-			}
-
-			var geo_options = {
-			  enableHighAccuracy: true,
-			  timeout: 27000,
-			};
-
-			var check_login = new XMLHttpRequest();
-			check_login.onreadystatechange = function() {
-				if (check_login.readyState == 4 && check_login.status == 200) {
-					var login_indicator = JSON.parse(check_login.responseText);
-					obtain_position(login_indicator.indicator);
-				}
-			}
-			check_login.open('GET', "{% url 'mugspot:checklginjs' %}", true);
-			check_login.send();
-
-			function test_function_2(indicator) {
-				console.log(indicator);
-			}
-
-			function obtain_position(indicator) {
-				if (indicator == 1) {
-					navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
-				} 
-			}
-		}
-		</script>
+		<div id="myLocation"> <!-- I am currently at (box to type location in) -->
+			I am currently at 
+			<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
+				{% csrf_token %}
+				{{ location_form.non_field_errors }} <!--need location form + form handling-->
+				<div class="fieldWrapper">
+					{{ location_form.location_name.errors }}
+					<label for="{{ location_form.location_name.id_for_label }}"></label>
+					{{ location_form.location_name }}
+				</div>
+				<button type="submit"  value="submit_location" class="btn btn-danger btn-sm">Submit</button>
+			</form>
 		</div>
+
+		<!--Tell others I'm here & tell others I've left buttons are here-->
+		<div class="btn-group btn-group-lg" role="group" aria-label="...">
+			<button type="button" class="btn btn-default"><a href="{% url 'mugspot:tellfriendsview' %}">Tell your fiends you're here!</a></button>
+			<button type="button" class="btn btn-default"><a href="{% url 'mugspot:tellfriendsview' %}">Tell your friends you've left!</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+		</div>
+
+		<!-- User account info editting here -->
+		<div id="myAccountInfo">
+			<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
+				{% csrf_token %}
+				{{ account_form.non_field_errors }}
+				<table>
+					<tr>
+						<div class="fieldWrapper">
+							{{ account_form.user_name.errors }}
+							<label for="{{ account_form.user_name.id_for_label }}"></label>
+							{{ account_form.user_name }}
+						</div>
+					</tr>
+					<tr>
+						<div class="fieldWrapper">
+							{{ account_form.user_email.errors }}
+							<label for="{{ account_form.user_email.id_for_label }}"></label>
+							{{ account_form.user_email }}
+						</div>
+					</tr>
+					<tr>
+						<div class="fieldWrapper">
+							{{ account_form.user_faculty.errors }}
+							<label for="{{ account_form.user_faculty.id_for_label }}"></label>
+							{{ account_form.user_faculty }}
+						</div>
+					</tr>
+				</table>
+				<p class="bs-component">
+					<center> 
+						<button type="submit"  value="confirm_change" class="btn btn-danger btn-sm">Confirm Changes</button>
+					</center>
+				</p>
+			</form>
+		</div>
+
+		<!--FriendList displayed here-->
+		<div id="friendlist">
+			<ul>
+				{% for friend in friend_list %}
+					<li>
+						{{ friend.user.username }}
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		<!--Friend requests list displayed here, but have not completed -->
+		<div id="friend_request_list">
+			<ul>
+				{% for request in friend_request_list %}
+					<li>
+						{{ request.sender.username }} would like to befriend you!
+						<div class="btn-group btn-group-sm" role="group" aria-label="...">
+							<button type="button" class="btn btn-default"><a href="{% url 'mugspot:friend_request_view' %}">Accept</a></button>
+							<button type="button" class="btn btn-default"><a href="{% url 'mugspot:friend_request_view' %}">Delete</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+						</div>
+					</li>
+				{% endfor %}
+			</ul>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
@@ -262,5 +254,3 @@
 		<!--jQuery first, then Bootstrap JS. -->
 	</body>
 </html>
-
-

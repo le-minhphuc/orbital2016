@@ -74,6 +74,28 @@ TEMPLATES = [
     },
 ]
 
+# Django crontab logger
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'orbital2016.cron_debug.crontabhandlerview',
+        },
+    },
+    'loggers': {
+        'django_crontab.crontab': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 WSGI_APPLICATION = 'orbital2016.wsgi.application'
 
 

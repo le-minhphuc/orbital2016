@@ -24,3 +24,11 @@ class UserRegisterForm(forms.Form):
 class UserLoginForm(forms.Form):
 	user_name = forms.CharField(label='Name',widget=forms.TextInput(attrs={'size':'40'}), max_length=200)
 	user_password = forms.CharField(label='Password', widget=forms.PasswordInput(), max_length=200)
+
+class AccountDetailForm(forms.Form):
+	user_name = forms.CharField(label='Username', max_length=200)
+	user_email = forms.EmailField(label='Email', max_length=254)
+	user_faculty = forms.CharField(label='Faculty', max_length=200)
+
+class LocationForm(forms.Form):
+	user_location = forms.CharField(label='Location', max_length=200)

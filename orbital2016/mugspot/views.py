@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import json
 # Create your views here.
-from .models import MugSpot, Person, Position, LiveUpdate
-from .forms import UserRegisterForm, UserLoginForm
+from .models import MugSpot, Person, Position, LiveUpdate, FriendUpdate, FriendRequest
+from .forms import UserRegisterForm, UserLoginForm, AccountDetailForm, LocationForm
 
 def index(request, place_id=0):
 	def find_pos(usr):
@@ -86,6 +86,38 @@ def index(request, place_id=0):
 				'username': user_1.username,
 				'live_update_list': live_update_list,
 			})
+@login_required # Still incomplete -- research more
+def user_profile_view(request):
+	""" Handle request for user's account page """
+	user = request.user
+	# show a form with data from database for 'GET' request
+	if request.method == 'GET':
+		person = Person.objects.filter(user=user)[0]
+		account_form = AccountDetailForm() # Display user account detail
+		account_form.user_name = user.username
+		account_form.user_email = user.email
+		account_form.user_faculty = person.faculty
+
+		location_form = LocationForm() # Display location box for user to type into
+
+		live_update_list = LiveUpdate.objects.all().order_by('date_time') # Display live update list
+
+		friend_update_list = FriendUpdate.objects.filter(receiver=user).order_by('date_time') # Display friend update list
+
+		friend_request_list = FriendRequest.objects.filter(receiver=user).order_by('-date_time') # Display friend request list
+
+		friend_list = person.friends.all() # Display all friends list
+
+		return render(request, 'mugspot/userprofile.html', {
+				'live_update_list':live_update_list,
+				'friend_update_list': friend_update_list,
+				'location_form': location_form,
+				'account_form': account_form,
+				'friend_list': friend_list,
+				'friend_request_list': friend_request_list,
+			})
+
+
 def about(request, place_id=0):
  	return render_to_response('mugspot/about.html')
 
@@ -162,4 +194,9 @@ def check_login_js_view(request):
 	response = JsonResponse({'indicator': indicator})
 	return response
 
+def update_friends_view(request):
+	pass
+
+def friend_request_view(request):
+	pass
 	
