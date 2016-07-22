@@ -1,5 +1,6 @@
 from django import forms
 from .models import Person
+from django.contrib.auth.models import User
 
 class UserRegisterForm(forms.Form):
 	username = forms.CharField(label='User name', max_length=200)
@@ -29,6 +30,21 @@ class AccountDetailForm(forms.Form):
 	user_name = forms.CharField(label='Username', max_length=200)
 	user_email = forms.EmailField(label='Email', max_length=254)
 	user_faculty = forms.CharField(label='Faculty', max_length=200)
+	class Meta:
+		model = User # Specify the model that this form is related to? 
+		fields = ['user_name', 'user_email', 'user_faculty']
+		widgets = {
+			'user_name': forms.TextInput(
+					attrs={'id':'User-username', 'required':False}
+				),
+			'user_email': forms.EmailInput(
+					attrs={'id':'User-useremail', 'required':False}
+				),
+			'user_faculty': forms.TextInput(
+					attrs={'id':'User-userfaculty', 'required':False}
+				),
+		}
+
 
 class LocationForm(forms.Form):
 	user_location = forms.CharField(label='Location', max_length=200)

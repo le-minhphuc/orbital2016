@@ -103,7 +103,7 @@
     			</div>
     			{% if user_indicator == 1 %}
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> WELCOME, <a href="{% url 'mugspot:user_profile_view' %}">{{ username }}</a>! </li>
+      				<li class="nav-item"> WELCOME, <a href="{% url 'mugspot:user_profile_view' user.id %}">{{ username }}</a>! </li>
       				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:logout' %}"> LOGOUT</a> </li>
       			</div>
       			{% else %}

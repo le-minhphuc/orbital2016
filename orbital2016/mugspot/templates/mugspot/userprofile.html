@@ -103,7 +103,7 @@
     			</div>
     			{% if user_indicator == 1 %}
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> WELCOME, {{ username }}! </li>
+      				<li class="nav-item"> WELCOME,<a href="{% url 'mugspot:user_profile_view' user.id %}">{{ stalker.username }}</a>!</li>
       				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:logout' %}"> LOGOUT</a> </li>
       			</div>
       			{% else %}
@@ -188,9 +188,10 @@
 		</div>
 
 		<!-- User account info editting here -->
+		{% if stalker.username == user_prof.username %}
+		<p>{{ user_prof.username }} account information</p>
 		<div id="myAccountInfo">
-			<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
-				{% csrf_token %}
+			<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
 				{{ account_form.non_field_errors }}
 				<table>
 					<tr>
@@ -222,35 +223,295 @@
 				</p>
 			</form>
 		</div>
+		{% endif %}
 
 		<!--FriendList displayed here-->
+		<p>All friends</p>
 		<div id="friendlist">
 			<ul>
 				{% for friend in friend_list %}
 					<li>
-						{{ friend.user.username }}
+						<a href="{% url 'mugspot:user_profile_view' friend.user.id %}">{{ friend.user.username }}</a>
 					</li>
 				{% endfor %}
 			</ul>
 		</div>
 
 		<!--Friend requests list displayed here, but have not completed -->
+		{% if stalker.username == user_prof.username %}
+		<p>All friend requests</p>
 		<div id="friend_request_list">
 			<ul>
 				{% for request in friend_request_list %}
 					<li>
 						{{ request.sender.username }} would like to befriend you!
 						<div class="btn-group btn-group-sm" role="group" aria-label="...">
-							<button type="button" class="btn btn-default"><a href="{% url 'mugspot:friend_request_view' %}">Accept</a></button>
-							<button type="button" class="btn btn-default"><a href="{% url 'mugspot:friend_request_view' %}">Delete</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+							<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="acceptRequest(this);">Accept</button>
+							<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="deleteRequest(this);">Delete</button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
 						</div>
 					</li>
 				{% endfor %}
 			</ul>
 		</div>
+		{% endif %}
+
+		<!-- Add friend button goes here -->
+		{% if stalker.username != user_prof.username %}
+			{% if addfriend_indicator == 0 %}
+				<div id="addFriendArea">
+					<button type="button" id="addFriendButton" onclick="createRequest();"><div id="addfriendsender">{{ stalker.username }}</div>, you can add <div id="addfriendreceiver">{{ user_prof.username }}</div> as a friend!</button>
+				</div>
+			{% elif addfriend_indicator == 1 %}
+				<div id="addFriendArea">
+					<button type="button" id="{{ user_prof.username }}" onclick="undoRequest(this.id);">Cancel request</button>
+				</div>
+			{% elif addfriend_indicator == 2 %}
+				<div id="addFriendArea">
+					<button type="button" id="{{ user_prof.username }}">Already your friend!</button>
+				</div>
+			{% endif %}
+		{% endif %}
+
+		<!-- Include javascript files here -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
-		    async defer></script>
+		<script>
+
+
+		$('#accInfoForm').on('submit', function(event){
+			event.preventDefault();
+			console.log("form submitted!");
+			update_account();
+		})
+
+		function acceptRequest(user_name) {
+			console.log("Accepting friend request is working!");
+			console.log(user_name.id);
+			
+			var xhr = new XMLHttpRequest();
+			var fd = new FormData();
+			fd.append('user_name',user_name.id);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					var response = xhr.responseText;
+					testing_2(response);
+				}
+			}
+			function testing_2(res_obj) {
+				console.log(res_obj);
+			}
+			xhr.open('POST', "{% url 'mugspot:accept_request_view' %}", true);
+			function getCookie(name) {
+			    var cookieValue = null;
+			    if (document.cookie && document.cookie !== '') {
+			        var cookies = document.cookie.split(';');
+			        for (var i = 0; i < cookies.length; i++) {
+			            var cookie = jQuery.trim(cookies[i]);
+			            // Does this cookie string begin with the name we want?
+			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			                break;
+			            }
+			        }
+			    }
+			    return cookieValue;
+			}
+			var csrftoken = getCookie('csrftoken');
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			xhr.send(fd);
+			
+		}
+
+		function deleteRequest(user_name) {
+			console.log("Deleting friend request is working!");
+			console.log(user_name.id);
+			var xhr = new XMLHttpRequest();
+			var fd = new FormData();
+			fd.append('user_name',user_name.id);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					var response = xhr.responseText;
+					testing_2(response);
+				}
+			}
+			function testing_2(res_obj) {
+				console.log(res_obj);
+			}
+			xhr.open('POST', "{% url 'mugspot:delete_request_view' %}", true);
+			function getCookie(name) {
+			    var cookieValue = null;
+			    if (document.cookie && document.cookie !== '') {
+			        var cookies = document.cookie.split(';');
+			        for (var i = 0; i < cookies.length; i++) {
+			            var cookie = jQuery.trim(cookies[i]);
+			            // Does this cookie string begin with the name we want?
+			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			                break;
+			            }
+			        }
+			    }
+			    return cookieValue;
+			}
+			var csrftoken = getCookie('csrftoken');
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			xhr.send(fd);
+		}
+
+		function undoRequest(button) {
+			console.log("undoRequest is starting!")
+			var xhr = new XMLHttpRequest();
+			var fd = new FormData();
+			fd.append('receiver_name',button);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					var response = JSON.parse(xhr.responseText); /* Will probably need a json response here */
+					testing_2(response);
+				}
+			}
+			function testing_2(res_obj) {
+				console.log(res_obj);
+				var sender_name = res_obj.sender;
+				var receiver_name = res_obj.receiver;
+				var parent = document.getElementById("addFriendArea");
+				var child = parent.children[0]; /* The cancel request button */
+				var add_request = document.createElement("button");
+				add_request.type = "button";
+				add_request.className = "btn btn-default";
+				add_request.id = "addFriendButton";
+				var sender = document.createElement("div");
+				var receiver = document.createElement("div");
+				var sender_text = document.createTextNode(sender_name);
+				var receiver_text = document.createTextNode(receiver_name);
+				sender.id = "addfriendsender";
+				receiver.id = "addfriendreceiver";
+				sender.appendChild(sender_text);
+				receiver.appendChild(receiver_text);
+				var text_1 = document.createTextNode(", you can add ");
+				var text_2 = document.createTextNode(" as a friend!");
+				add_request.appendChild(sender);
+				add_request.appendChild(text_1);
+				add_request.appendChild(receiver);
+				add_request.appendChild(text_2);
+				add_request.onclick = function() {
+					createRequest();
+				}
+				parent.replaceChild(add_request,child);
+			}
+			xhr.open('POST', "{% url 'mugspot:undo_request_view' %}", true);
+			function getCookie(name) {
+			    var cookieValue = null;
+			    if (document.cookie && document.cookie !== '') {
+			        var cookies = document.cookie.split(';');
+			        for (var i = 0; i < cookies.length; i++) {
+			            var cookie = jQuery.trim(cookies[i]);
+			            // Does this cookie string begin with the name we want?
+			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			                break;
+			            }
+			        }
+			    }
+			    return cookieValue;
+			}
+			var csrftoken = getCookie('csrftoken');
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			xhr.send(fd);
+		}
+
+		function createRequest() {
+			console.log("Creating friend request is working!");
+			console.log($("#addfriendsender").text());
+			console.log($("#addfriendreceiver").text());
+			var xhr = new XMLHttpRequest();
+			var fd = new FormData();
+			fd.append('sender',$("#addfriendsender").text());
+			fd.append('receiver',$("#addfriendreceiver").text());
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					var response = xhr.responseText;
+					testing_2(response);
+				}
+			}
+			function testing_2(res_obj) {
+				console.log(res_obj);
+				var prof_name = $("#addfriendreceiver").text();
+				var parent = document.getElementById("addFriendArea");
+				var child = document.getElementById("addFriendButton");
+				var cancel_request = document.createElement("button");
+				cancel_request.type = "button";
+				cancel_request.className = "btn btn-default";
+				cancel_request.id = prof_name;
+				cancel_request.onclick = function() {
+					undoRequest(prof_name);
+				}
+				var cancel_request_text = document.createTextNode("Cancel request")
+				cancel_request.appendChild(cancel_request_text);
+				parent.replaceChild(cancel_request,child);
+			}
+			xhr.open('POST', "{% url 'mugspot:create_request_view' %}", true);
+			function getCookie(name) {
+			    var cookieValue = null;
+			    if (document.cookie && document.cookie !== '') {
+			        var cookies = document.cookie.split(';');
+			        for (var i = 0; i < cookies.length; i++) {
+			            var cookie = jQuery.trim(cookies[i]);
+			            // Does this cookie string begin with the name we want?
+			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			                break;
+			            }
+			        }
+			    }
+			    return cookieValue;
+			}
+			var csrftoken = getCookie('csrftoken');
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			xhr.send(fd);
+			
+		}
+
+		function update_account() {
+			console.log("Update account is working!");
+			var xhr = new XMLHttpRequest();
+			var fd = new FormData();
+			fd.append('user_name',$('#User-username').val());
+			fd.append('user_email',$('#User-useremail').val());
+			fd.append('user_faculty',$('#User-userfaculty').val());
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					var response = xhr.responseText;
+					testing_2(response);
+				}
+			}
+			function testing_2(res_obj) {
+				console.log(res_obj);
+			}
+			xhr.open('POST', "{% url 'mugspot:update_account_view' %}", true);
+			function getCookie(name) {
+			    var cookieValue = null;
+			    if (document.cookie && document.cookie !== '') {
+			        var cookies = document.cookie.split(';');
+			        for (var i = 0; i < cookies.length; i++) {
+			            var cookie = jQuery.trim(cookies[i]);
+			            // Does this cookie string begin with the name we want?
+			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			                break;
+			            }
+			        }
+			    }
+			    return cookieValue;
+			}
+			var csrftoken = getCookie('csrftoken');
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			xhr.send(fd);
+		}
+		</script>
+		<!--
+		{% block js %}
+			<script src="{% static 'mugspot/userprofile.js' %}"></script>
+		{% endblock %} -->
+
 		<!--jQuery first, then Bootstrap JS. -->
 	</body>
 </html>

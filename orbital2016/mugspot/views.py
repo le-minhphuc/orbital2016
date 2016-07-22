@@ -76,6 +76,7 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
+				'user': user_1,
 			})
 	else: 
 		list_places = MugSpot.objects.filter(ancestor_spot=None).order_by('-spot_name')
@@ -85,11 +86,18 @@ def index(request, place_id=0):
 				'user_indicator': user_indicator,
 				'username': user_1.username,
 				'live_update_list': live_update_list,
+				'user': user_1,
 			})
 @login_required # Still incomplete -- research more
-def user_profile_view(request):
+def user_profile_view(request, user_id=0):
 	""" Handle request for user's account page """
-	user = request.user
+	user = User.objects.filter(id=user_id)[0]
+	stalker = request.user 
+	user_indicator = 0 # Used to check if the user is logged in 
+	if (stalker.is_authenticated()):
+		user_indicator = 1
+	else:
+		user_indicator = 0
 	# show a form with data from database for 'GET' request
 	if request.method == 'GET':
 		person = Person.objects.filter(user=user)[0]
@@ -108,6 +116,17 @@ def user_profile_view(request):
 
 		friend_list = person.friends.all() # Display all friends list
 
+		addfriend_indicator = 0 # Help decide the status of the add friend button
+		person_2 = Person.objects.filter(user=stalker)[0]
+		if (person_2 in friend_list):
+			addfriend_indicator = 2 # stalker and user whose profile being shown are friends
+		else:
+			relevant_request = FriendRequest.objects.filter(sender=stalker,receiver=user)
+			if len(relevant_request) == 0:
+				addfriend_indicator = 0 # stalker has not added user whose profile is being shown as a friend
+			else:
+				addfriend_indicator = 1 # stalker has added user whose profile is being shown as a friend
+
 		return render(request, 'mugspot/userprofile.html', {
 				'live_update_list':live_update_list,
 				'friend_update_list': friend_update_list,
@@ -115,6 +134,10 @@ def user_profile_view(request):
 				'account_form': account_form,
 				'friend_list': friend_list,
 				'friend_request_list': friend_request_list,
+				'user_prof': user,
+				'stalker': stalker,
+				'user_indicator': user_indicator,
+				'addfriend_indicator': addfriend_indicator,
 			})
 
 
@@ -184,6 +207,8 @@ def check_login_js_view(request):
 	indicator = 0
 	if (user_1.is_authenticated()):
 		all_pos = Position.objects.all()
+		if len(all_pos) == 0:
+			indicator = 1
 		for position in all_pos:
 			if position.user.username == user_1.username:
 				indicator = 2
@@ -197,6 +222,67 @@ def check_login_js_view(request):
 def update_friends_view(request):
 	pass
 
-def friend_request_view(request):
-	pass
+def accept_request_view(request):
+	user = request.user
+	if request.method == 'POST':
+		sender = request.POST.get('user_name')
+		sender = User.objects.filter(username=sender)[0]
+		request = FriendRequest.objects.filter(sender=sender,receiver=user)[0]
+		request.delete()
+		person_sender = Person.objects.filter(user=sender)[0]
+		person_receiver = Person.objects.filter(user=user)[0]
+		person_sender.friends.add(person_receiver)
+		person_receiver.friends.add(person_sender)
+		return HttpResponse("Add Friend Succeeded!")
+	else:
+		return HttpResponse("Go away guys, nothing to see here!")
+
+def delete_request_view(request):
+	user = request.user
+	if request.method == 'POST':
+		sender = request.POST.get('user_name')
+		sender = User.objects.filter(username=sender)[0]
+		request = FriendRequest.objects.filter(sender=sender,receiver=user)[0]
+		request.delete()
+		return HttpResponse("Delete Request Succeeded!")
+	else:
+		return HttpResponse("Go away guys, nothing to see here!")
+
+
+def create_request_view(request):
+	if request.method == 'POST':
+		sender = request.POST.get('sender')
+		sender = User.objects.filter(username=sender)[0]
+		receiver = request.POST.get('receiver')
+		receiver = User.objects.filter(username=receiver)[0]
+		request = FriendRequest(sender=sender, receiver=receiver, sender_consent=True)
+		request.save()
+		return HttpResponse("Created Request Succeeded! Sender: " + sender.username + ", Receiver: " + receiver.username)
+	else:
+		return HttpResponse("Go away guys, nothing to see here!")
+
+def undo_request_view(request):
+	sender = request.user.username
+	if request.method == 'POST':
+		receiver = request.POST.get('receiver_name')
+		sender = User.objects.filter(username=sender)[0]
+		receiver = User.objects.filter(username=receiver)[0]
+		request = FriendRequest.objects.filter(sender=sender,receiver=receiver)
+		request.delete()
+		response = JsonResponse({'sender': sender.username, 'receiver': receiver.username})
+		return response
+	else:
+		return HttpResponse("Go away guys, nothing to see here!")
+
+def update_account_view(request):
+	user = request.user
+	if request.method == 'POST':
+		user.username = request.POST.get('user_name')
+		user.email = request.POST.get('user_email')
+		person = Person.objects.filter(user=user)[0]
+		person.faculty = request.POST.get('user_faculty')
+		user.save()
+		person.save()
+		return HttpResponse("Success!")
+
 	
