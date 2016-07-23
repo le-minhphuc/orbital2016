@@ -83,7 +83,7 @@
     			display:inline;
 			}
 			a {
-				color: #4494E8  ;
+				color: #4494E8;
 			}
 			body {
       			background-color:#3683D5;
@@ -111,6 +111,10 @@
 
 			tr {
 				padding-bottom: 5px;
+			}
+			.box {
+				width:100%;
+				text-align: center;
 			}
 		</style>
 		<!-- Bootstrap CSS -->
@@ -279,99 +283,145 @@
 						</div>
 
 						<!--Logout button-->
-						<button type="button" class="btn" style="background-color:#B62E06; margin-left:40%;"> <a href="{% url 'mugspot:logout' %}"> Logout </a></button>
+						<button type="submit" class="btn" style="background-color:#B62E06; margin-left:40%;"> <a href="{% url 'mugspot:logout' %}"> Logout </a></button>
 					
 						{% endif %}
 						<!--Copyright-->
 				   		<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
 					</div>
 				</div>
-		
-			<div class = "col-md-9" style="padding-left:0px">
+
+
 			{% if stalker.username == user_prof.username %}
+			<div class = "col-md-9" style="padding-left:0px">
+				<h2 style="text-align:center"> {{ user_prof.username }} 's profile </h2>	
+				<div class="box">
+					<h4> <b> ACCOUNT DETAILS </b></h4> <br>
+					<div id="myAccountInfo">
+						<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
+							{{ account_form.non_field_errors }}
+							<table align="center">
+								<col style="width:30%">
+								<col style="width:60%">
+								<col style="width:10%">
+								<tr>
+									<div class="fieldWrapper">
+										{{ account_form.user_name.errors }}
+										<td style="text-align:left"> <label for="{{ account_form.user_name.id_for_label }}">Username:</label> </td>
+										<td> {{ account_form.user_name }} </td>
+										<td> <span class="
+glyphicon glyphicon-pencil" size="50%"> </span></td>
+									</div>
+								</tr>
+								<tr>
+									<div class="fieldWrapper">
+										{{ account_form.user_email.errors }}
+										<td style="text-align:left"> <label for="{{ account_form.user_email.id_for_label }}">Email:</label> </td>
+										<td> {{ account_form.user_email }} </td>
+										<td> <span class="
+glyphicon glyphicon-pencil" size="50%"> </span></td>
+									</div>
+								</tr>
+								<tr>
+									<div class="fieldWrapper">
+										{{ account_form.user_faculty.errors }}
+										<td style="text-align:left"> <label for="{{ account_form.user_faculty.id_for_label }}">Faculty:</label> </td>
+										<td> {{ account_form.user_faculty }} </td>
+										<td> <span class="
+glyphicon glyphicon-pencil" size="50%"> </span></td>
+									</div>
+								</tr>
+							</table>
 
-				<p>Account Details</p>
-							<div id="myAccountInfo">
-								<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
-									{{ account_form.non_field_errors }}
-									<table>
-										<tr>
-											<div class="fieldWrapper">
-												{{ account_form.user_name.errors }}
-												<label for="{{ account_form.user_name.id_for_label }}">User name:</label>
-												{{ account_form.user_name }}
-											</div>
-										</tr>
-										<tr>
-											<div class="fieldWrapper">
-												{{ account_form.user_email.errors }}
-												<label for="{{ account_form.user_email.id_for_label }}">User email:</label>
-												{{ account_form.user_email }}
-											</div>
-										</tr>
-										<tr>
-											<div class="fieldWrapper">
-												{{ account_form.user_faculty.errors }}
-												<label for="{{ account_form.user_faculty.id_for_label }}">User faculty:</label>
-												{{ account_form.user_faculty }}
-											</div>
-										</tr>
-									</table>
-									<p class="bs-component">
-										<center> 
-											<button type="submit"  value="confirm_change" class="btn btn-danger btn-sm">Confirm Changes</button>
-										</center>
-									</p>
-								</form>
-							</div>
-							{% endif %}
+							<p class="bs-component">
+								<center> 
+									<button type="submit" class="btn" value="confirm_change" style="background-color:#B62E06;""> Confirm Changes</button>
+								</center>
+							</p>
+						</form>
+					</div>
+				</div>
 
+				<div class="box">
+				    <div class="panel panel-default" style="height:310px;width:35%;margin-left:10%; margin-right:5%;float:left;">
+						<div class="panel-heading" style="background-color:#F99027 !important;"> ALL FRIENDS </div>
+							<div class="panel-body" style="background-color:#333333">
 							<!--FriendList displayed here-->
-							<p>All friends</p>
+								<div id="friendlist">
+									<ul>
+										{% for friend in friend_list %}
+										<li style="width:115%">
+											<a href="{% url 'mugspot:user_profile_view' friend.user.id %}" style="color:white;text-decoration:none;;">{{ friend.user.username }}</a>
+											<button type="submit" class="btn" style="background-color:#B62E06; float:right;padding:0px;margin-bottom:0px;"> Remove</button>
+										</li>
+											{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					<div class="panel panel-default" style="height:310px;width:35%; margin-left:5%; margin-right:10%;float:right" >	
+						<!--Friend requests list displayed here, but have not completed -->	
+						<div class="panel-heading" style="background-color:#F99027 !important;"> ALL FRIEND REQUESTS </div>
+						<div class="panel-body" style="background-color:#333333">
+							<div id="friend_request_list">
+								<ul>
+							{% for request in friend_request_list %}
+								<li style="width:115%">
+									{{ request.sender.username }} would like to befriend you!
+									<div class="btn-group btn-group-sm" role="group" aria-label="...">
+									<button type="button" id="{{ request.sender.username }}" class="btn btn-secondary" style="background-color: #3683D5;"  onclick="acceptRequest(this)">Accept</button>
+									<button type="button" id="{{ request.sender.username }}" class="btn btn-secondary" style="background-color: #B62E06;" onclick="deleteRequest(this)">Delete</button>
+									<!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+									</div>
+								</li>
+								{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</div>				
+				</div>
+			</div>
+			{% endif %}
+
+			{% if stalker.username != user_prof.username %}
+			<div class = "col-md-9" style="padding-left:0px">
+				<h2 style="text-align:center"> {{ user_prof.username }} 's profile </h2>
+				<div class="box">
+					<div class="panel panel-default" style="height:310px;width:40%;margin-left:30%;" >
+						<div class="panel-heading" style="background-color:#F99027 !important;"> ALL FRIENDS </div>
+						<div class="panel-body" style="background-color:#333333">
+						<!--FriendList displayed here-->
 							<div id="friendlist">
 								<ul>
 									{% for friend in friend_list %}
-										<li>
-											<a href="{% url 'mugspot:user_profile_view' friend.user.id %}">{{ friend.user.username }}</a>
-										</li>
-									{% endfor %}
+									<li style="width:115%">
+										<a href="{% url 'mugspot:user_profile_view' friend.user.id %}" style="color:white;text-decoration:none;;">{{ friend.user.username }}</a>
+										<button type="submit" class="btn" style="background-color:#B62E06; float:right;padding:0px;margin-bottom:0px;"> Remove</button>
+									</li>
+										{% endfor %}
 								</ul>
 							</div>
+						</div>
+					</div>
 
-							<!--Friend requests list displayed here, but have not completed -->
-							{% if stalker.username == user_prof.username %}
-							<p>All friend requests</p>
-							<div id="friend_request_list">
-								<ul>
-									{% for request in friend_request_list %}
-										<li>
-											{{ request.sender.username }} would like to befriend you!
-											<div class="btn-group btn-group-sm" role="group" aria-label="...">
-												<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="acceptRequest(this);">Accept</button>
-												<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="deleteRequest(this);">Delete</button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
-											</div>
-										</li>
-									{% endfor %}
-								</ul>
-							</div>
-							{% endif %}
-
-							<!-- Add friend button goes here -->
-							{% if stalker.username != user_prof.username %}
-								{% if addfriend_indicator == 0 %}
-									<div id="addFriendArea">
-										<button type="button" id="addFriendButton" onclick="createRequest();"><div id="addfriendsender">{{ stalker.username }}</div>, you can add <div id="addfriendreceiver">{{ user_prof.username }}</div> as a friend!</button>
-									</div>
-								{% elif addfriend_indicator == 1 %}
-									<div id="addFriendArea">
-										<button type="button" id="{{ user_prof.username }}" onclick="undoRequest(this.id);">Cancel request</button>
-									</div>
-								{% elif addfriend_indicator == 2 %}
-									<div id="addFriendArea">
-										<button type="button" id="{{ user_prof.username }}">Already your friend!</button>
-									</div>
-								{% endif %}
-							{% endif %}
+						
+					{% if addfriend_indicator == 0 %}
+					<div id="addFriendArea">
+						<button type="button" class="btn" style="background-color:##B62E06" id="addFriendButton" onclick="createRequest();"><div id="addfriendsender">{{ stalker.username }}</div>, you can add <div id="addfriendreceiver">{{ user_prof.username }}</div> as a friend!</button>
+					</div>
+					{% elif addfriend_indicator == 1 %}
+					<div id="addFriendArea">
+						<button type="button" class="btn" style="background-color:##B62E06" id="{{ user_prof.username }}" onclick="undoRequest(this.id);">Cancel request</button>
+					</div>
+					{% elif addfriend_indicator == 2 %}
+					<div id="addFriendArea">
+						<button type="button" type="button" class="btn" style="background-color:#1FD51F" id="{{ user_prof.username }}">Already your friend!</button>
+					</div>
+					{% endif %}
+					{% endif %}
+				</div>
+			</div>
 
 					<!-- Include javascript files here -->
 					<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -608,11 +658,11 @@
 						xhr.send(fd);
 					}
 					</script>
-					</div>		
-				</div>
-			</div>
+				</div>	
+			</div>	
 		</div>
 
+	
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
