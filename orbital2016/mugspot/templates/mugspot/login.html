@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title> Home</title>
+		<title> User Login </title>
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
@@ -32,9 +32,17 @@
 		.login-panel {
 			background-color: #333333;
 			border-width: 0px;
-			width: 300px;
+			width: 70%;
 			margin-top: 20%;
-			text-align: center;
+			margin-left:15%;
+			text-align: left;
+			
+		}
+		.panel > .panel-heading {
+			background-image: none;
+			background-color: #F99027 !important;
+			color: white;
+			border: none;
 		}
 		.navbar-collapse {
   			text-align:center;
@@ -50,7 +58,7 @@
     		color: white;
     		width: 100%;
 		}
-		input[type=text] {
+		input[type] {
     		width: 170px;
     		border: 0;
     		font-size: 13px;
@@ -59,6 +67,7 @@
             -webkit-transition: width 0.4s ease-in-out;
     		transition: width 0.4s ease-in-out;
     		margin-right: 20px;
+    		
 		}
 		a {
 			color: #4494E8  ;
@@ -70,74 +79,81 @@
 			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 			overflow: scroll;
 			color: white;
-    	}	  
+    	}
+
     	.fieldWrapper {
     		text-decoration-color: black;
     	}
+
+    	tr {
+    		padding-bottom: 5px;
+    	}
+
 		</style>
 		<!-- Bootstrap CSS -->
 	</head>
 	<body>
 		{% load staticfiles %}
-		<nav class="navbar navbar-inverse" style="background-color:#F38019;">
+		<nav class="navbar navbar-inverse">
 	  		<div class="container-fluid">
     			<div class="navbar-header">	
-					<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="150" height="45" style="position: relative; top:-10px; "  alt="Logo"></a> 
+					<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="150" height="45" style="position: relative; top:-10px;"  alt="Logo"></a> 
 				</div>
     			<div class="nav navbar-nav">
-      				<li class="nav-item "><a class="nav-link"c href = "{% url 'mugspot:index' %}">HOME</a></li>
-      				<li class="nav-item"><a class="nav-link" href="{% url 'mugspot:about' %}"> ABOUT </a></li>
+      				<li><a href = "{% url 'mugspot:index' %}">HOME</a></li>
+      				<li><a href="{% url 'mugspot:about' %}"> ABOUT </a></li>
     			</div>
+
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:index' %}" > REGISTER</a> </li>
-      				<li class="nav-item active"> <a class="nav-link" href="{% url 'mugspot:login' %}"> LOGIN</a> </li>
+      				<li> <a href="{% url 'mugspot:register' %}"> REGISTER</a> </li>
+      				<li class="active"> <a href="{% url 'mugspot:login' %}"> LOGIN</a> </li> 
       			</div>
   			</div>
 		</nav>
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-	<div class="login-panel panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title"> User Login </h3>
-		</div>
-		<div class="panel-body">	
-			<form action="{% url 'mugspot:login' %}" method="POST">
-			{% csrf_token %}
-			{{ user_form.non_field_errors }}
-			<p class="bs-component">
-				<table>
-					<tr>
-						<div class="fieldWrapper">
-							{{ user_form.user_name.errors }}
-							<label for="{{ user_form.user_name.id_for_label }}">User Name:</label>
-							{{ user_form.user_name }}
+				
+		<div class="container-fluid">
+    		<div class="row">
+        		<div class="col-md-4 col-md-offset-4">
+					<div class="login-panel panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title" style="text-align:center"> User Login </h3>
 						</div>
-					</tr>
-					<tr>
-						<div class="fieldWrapper">
-							{{ user_form.user_password.errors }}
-							<label for="{{ user_form.user_password.id_for_label }}">Password:</label>
-						    {{ user_form.user_password }}
-						</div>
-					</tr>
-				</table>
-			</p>
-			<p class="bs-component">
-				<center> 
-					<button type="submit"  value="login" class="btn btn-danger btn-sm">Sign in!</button>
-				</center>
-			</p>
-			</form>
+					<div class="panel-body">	
+						<form action="{% url 'mugspot:login' %}" method="POST">
+							{% csrf_token %}
+							{{ user_form.non_field_errors }}
+							<p class="bs-component">
+								<table>
+									<tr>
+										<div class="fieldWrapper">
+											{{ user_form.user_name.errors }}
+											<label for="{{ user_form.user_name.id_for_label }}">User Name:</label>
+											{{ user_form.user_name }}
+										</div>
+									</tr>
+									<tr>
+										<div class="fieldWrapper">
+											{{ user_form.user_password.errors }}
+											<label for="{{ user_form.user_password.id_for_label }}">Password:</label>
+										    {{ user_form.user_password }}
+										</div>
+									</tr>
+								</table>
+							</p>
+							<p class="bs-component">
+								<center> 
+									<button type="submit"  value="login" class="btn btn-danger btn-sm" style="border-radius:30px;">Sign in!</button>
+								</center>
+							</p>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-	</div>
-	</div>
-	</div>
 
-	<div class="bottom-default" style="text-align:center;"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		<!--jQuery first, then Bootstrap JS. -->
+		<div class="bottom-default" style="text-align:center;"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+			<!--jQuery first, then Bootstrap JS. -->
 	</body>
 </html>

@@ -11,256 +11,437 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<style>
-		#map {
-		    height: 800px;
-		}
-		.navbar-fixed-top {
-    		min-height: 90px;
-		}
-		#nav, #nav-inner, .nav-list, .nav-list-item a {
-			color: #fffff0;
-		}
-		.navbar-nav > li > a > {
-    		padding-top: 0px;
-    		padding-bottom: 0px;
-    		line-height: 90px;
-    		font-color: white;
-    		font-size: 40px;
-    		margin-left: 50px;
-   			margin-right: 50px;
-		}
-		.bottom-default {
-    		position: fixed;
-    		bottom: 10px;
-    		font-size: 10px;
-    		color: white;
-    		width: 100%;
-		}
-		.encourage{
-    		position: fixed;
-    		bottom: 40px;
-    		font-size: 23px;
-    		color: white;
-    		width: 100%;
+			#map {
+		    	height: 800px;
+			}
+			.navbar-fixed-top {
+    			min-height: 90px;
+			}
+			#nav, #nav-inner, .nav-list, .nav-list-item a {
+				color: #fffff0;
+			}
+			.panel {
+				text-align: center;
+				border: none;
+				overflow: scroll;
+			}
+			.panel > .panel-heading {
+				background-image: none;
+				background-color: #333333!important;
+				color: white;
+				border: none;
+			}
+			.panel > .panel-body {
+				background-image: none;
+				background-color: #F99027;
+				color: white;
+				border: none;
+				overflow-:scroll;
+			}
+			.navbar-nav > li > a > {
+    			padding-top: 0px;
+    			padding-bottom: 0px;
+    			line-height: 90px;
+    			font-color: white;
+    			font-size: 40px;
+    			margin-left: 50px;
+   				margin-right: 50px;
+			}
+			.btn {
+				border-radius: 50px;
+				background-image: none;
+				color: white;
+				padding:7px;
+				margin-bottom:20px;
+				right:0%;
+				-webkit-appearance:none;
+			}
+			.btn > a {
+				color:white;
+				text-decoration: none;
+			}
+			.bottom-default {
+    			position: fixed;
+    			bottom: 10px;
+    			font-size: 10px;
+    			color: white;
+    			width: 100%;
+    			text-align: center;
+			}
+			input[type] {
+    			width: 170px;
+    			border: 2px solid;
+    			border-color:#4F4D4B  ;
+    			font-size: 13px;
+    			background-color: white;
+    			padding: 2px 10px 2px 10px;
+                -webkit-transition: width 0.4s ease-in-out;
+    			transition: width 0.4s ease-in-out;
+    			margin-left:5px;  
+    			border-radius: 30px;
+    			color: black;
+    			display:inline;
+			}
+			a {
+				color: #4494E8  ;
+			}
+			body {
+      			background-color:#3683D5;
+      			width: 100%;
+      			height: 100%;
+				font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+				overflow: scroll;
+				color: white;
+    		}
+    		ul{
+  				list-style:none;
+			}
+			ul li{
+  				float:left;
+  				width:120%;
+  				padding:5px;
+  				margin-left: -40px;
+  				margin-right: 40px;
+  				text-align: left;
+  				font-size:12px;
+  				border:1px solid ;
+  				border-color: #F99027;
+  				background-color: #333333;
+			}
 
-		}
-		input[type=text] {
-    		width: 170px;
-    		border: 0;
-    		font-size: 13px;
-    		background-color: white;
-    		padding: 2px 10px 2px 10px;
-            -webkit-transition: width 0.4s ease-in-out;
-    		transition: width 0.4s ease-in-out;
-    		margin-left:15px; 
-    		margin-right:25px; 
-		}
-		a {
-			color: #4494E8  ;
-		}
-		body {
-      		background-color:#3683D5;
-      		width: 100%;
-      		height: 100%;
-			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-			overflow: scroll;
-			color: white;
-    	}
-    	ul{
-  			list-style:none;
-		}
-
-		ul li{
-  			float:left;
-  			width:117%;
-  			padding:10px;
-  			margin-left: -40px;
-  			margin-right: 40px;
-  			text-align: center;
-		}
-
-		ul li:nth-child(2n){
-  			background-color:#F99027;
-		}
-
-		ul li:nth-child(2n+1){
-  			clear:both;
-  			background-color:#333333;
-		}
+			tr {
+				padding-bottom: 5px;
+			}
 		</style>
 		<!-- Bootstrap CSS -->
 	</head>
 	<body>
 		{% load staticfiles %}
+		<!--Navigation bar-->
 		<nav class="navbar navbar-inverse">
 	  		<div class="container-fluid">
     			<div class="navbar-header">	
 					<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="150" height="45" style="position: relative; top:-10px; "  alt="Logo"></a> 
 				</div>
     			<div class="nav navbar-nav">
-      				<li class="nav-item active"><a class="nav-link"c href = "{% url 'mugspot:index' %}">HOME</a></li>
-      				<li class="nav-item"><a class="nav-link" href="{% url 'mugspot:about' %}"> ABOUT </a></li>
+      				<li class="active"><a href = "{% url 'mugspot:index' %}">HOME</a></li>
+      				<li><a href="{% url 'mugspot:about' %}"> ABOUT </a></li>
     			</div>
+    			
     			{% if user_indicator == 1 %}
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> WELCOME, <a href="{% url 'mugspot:user_profile_view' user.id %}">{{ username }}</a>! </li>
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:logout' %}"> LOGOUT</a> </li>
+        			<li> <a href="{% url 'mugspot:user_profile_view' user.id %}"> MY PROFILE &nbsp; <span class="glyphicon glyphicon-menu-hamburger"></span></a> </li>
       			</div>
+      			
       			{% else %}
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:register' %}" > REGISTER</a> </li>
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:login' %}"> LOGIN</a> </li>
+      				<li> <a href="{% url 'mugspot:register' %}"> REGISTER</a> </li>
+      				<li> <a href="{% url 'mugspot:login' %}"> LOGIN</a> </li> 
       			</div>
       			{% endif %}
   			</div>
 		</nav>
-		<div class="container-fluid">
-			<div class = "col-md-3">
-			   	<p style="font-size:23px; text-align: center;"> Live Update </p>
-				<div id="live_update"> <!--Live update list-->
-					<ul>
-					{% for live_update_element in live_update_list %}
-						{% if live_update_element.place == null and live_update_element.status == True %}
-						<li>
-							{{ live_update_element.username }} just entered a new MugSpot!
-						</li>
-						{% elif live_update_element.place == null and live_update_element.status != True %}
-						<li>
-							{{ live_update_element.username }} just left a new MugSpot!
-						</li>
-						{% elif live_update_element.place != null and live_update_element.status != True %}
-						<li>
-							{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
-						</li>
+				
+		<!--Split webpage into 2 portions horizontally, ratio: 3:9-->
+		<div class="row">
+			<div class="container-fluid">
+				<div class = "col-md-3" style="padding:0px;">
+					<div class="container-fluid">
+						<!--Live update panel-->
+						{% if user_indicator == 0 %}
+						<div class="panel panel-default" style="height:310px;" >
+							<div class="panel-heading"> Live Update </div>
+							<div class="panel-body">
+								<div id="live_update"> <!--Live update list-->
+									<ul>
+									{% for live_update_element in live_update_list %}
+										{% if live_update_element.place == null and live_update_element.status == True %}
+										<li>
+											{{ live_update_element.username }} just entered a new MugSpot!
+										</li>
+											{% elif live_update_element.place == null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left a new MugSpot!
+										</li>
+											{% elif live_update_element.place != null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
+										</li>
+											{% else %}
+										<li>
+											{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
+										</li>
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--Friend update panel-->
+						<div class="panel panel-default" style ="height:310px;">
+							<div class="panel-heading"> Friend Update </div>
+							<div class="panel-body">
+								<div id="friend_update"> <!-- List of all friends updates on locations -->
+									<ul>
+										{% for friend_update in friend_update_list %}
+										{% if friend_update.mug_spot == "" and friend_update.status == True %}
+										<li>
+											{{ friend_update.sender.username }} just entered a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+										</li>
+										{% else %}
+										<li>
+											{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+										</li>
+										{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+
 						{% else %}
-						<li>
-							{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
-						</li>
+						<div class="panel panel-default" style="height:220px;" >
+							<div class="panel-heading"> Live Update </div>
+							<div class="panel-body">
+								<div id="live_update"> <!--Live update list-->
+									<ul>
+									{% for live_update_element in live_update_list %}
+										{% if live_update_element.place == null and live_update_element.status == True %}
+										<li>
+											{{ live_update_element.username }} just entered a new MugSpot!
+										</li>
+											{% elif live_update_element.place == null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left a new MugSpot!
+										</li>
+											{% elif live_update_element.place != null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
+										</li>
+											{% else %}
+										<li>
+											{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
+										</li>
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--Friend update panel-->
+						<div class="panel panel-default" style ="height:220px;">
+							<div class="panel-heading"> Friend Update </div>
+							<div class="panel-body">
+								<div id="friend_update"> <!-- List of all friends updates on locations -->
+									<ul>
+										{% for friend_update in friend_update_list %}
+										{% if friend_update.mug_spot == "" and friend_update.status == True %}
+										<li>
+											{{ friend_update.sender.username }} just entered a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+										</li>
+										{% else %}
+										<li>
+											{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+										</li>
+										{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>						
+						<div id="myLocation"> <!-- I am currently at (box to type location in) -->
+							<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
+								{% csrf_token %}
+								{{ location_form.non_field_errors }} <!--need location form + form handling-->
+								<div class="fieldWrapper">
+									{{ location_form.location_name.errors }}
+									<label> I am currently at: </label>
+									<input type="text" value="{{ location_form.location_name }}" placeholder="Your location..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your location...'" />
+								</div>
+							</form>
+						</div>
+						<br>
+
+						<!--Tell others you are here/ have left-->
+						
+						<div class="btn-group btn-group-sm" role="group" aria-label="...">
+							<button type="button" class="btn btn-secondary" style="background-color: #F99027"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you're here!</a></button>
+							<button type="button" class="btn btn-secondary" style="background-color: #333333;"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you've left!</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+						</div>
+
+						<!--Logout button-->
+						<button type="button" class="btn" style="background-color:#B62E06; margin-left:40%;"> <a href="{% url 'mugspot:logout' %}"> Logout </a></button>
+					
 						{% endif %}
-					{% endfor %}
-					</ul>
+						<!--Copyright-->
+				   		<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
+					</div>
 				</div>
-				{% if user_indicator == 1 %}
-				<div class="encourage"> Jio your Friends! </div>
-				{% endif %}
-			   	<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
 
+				<div class = "col-md-9" style="padding-left:0px">
+					<!--Title + list of mugspots-->
+					<div style="background-color: #333333; padding-top:5px; padding-bottom:5px;">
+						<p style="font-size:23px; text-align: center; "> Mugging spots in {{ place }}</p>
+						<ul>
+						<table>
+							<tr>
+								{% for place in list_places %}
+								<td style ="padding:0 15px 0 15px">
+									<p>
+			    		 				<a href="#"> {{ place.spot_name }}</a>
+			  							<a href="{% url 'mugspot:index' place.id %}"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+			  							<div class="blockquote">
+			  								<table>
+			  									<tr>
+			  										<td style ="padding:0 15px 0 15px">
+												    	<p><u><b>Location Info: </b> </u> </p>
+												    	<h6> <span class="glyphicon glyphicon-time""> Opening hours: All day </span></h6>
+												    	<p> <span class="glyphicon glyphicon-blackboard""> </span></p>
+												    </td>
+
+												    <td style ="padding:0 15px 0 15px">
+												    	<p><u><b>Tips: </b> </u> </p>
+												    	<p> <span class="glyphicon glyphicon-thumbs-up"> </span></p>
+												    	<p> <span class="glyphicon glyphicon-thumbs-down"> </span></p>
+											    	</td>
+											    </tr>
+											</table>
+
+										</div>	
+									</p>
+								</td>
+								{% endfor %}
+							</tr>
+						</table>
+						</ul>
+					</div>
+					
+					<!--Google Map-->
+					<div>
+						<div id="id01"></div>
+						<div id="map"></div>
+						<script>
+						var map;
+						function initMap() {
+							map = new google.maps.Map(document.getElementById('map'), {
+								center: {lat: 1.306, lng: 103.773},
+								zoom: 18,
+							});
+
+							var xhr_2 = new XMLHttpRequest();
+							xhr_2.onreadystatechange = function() {
+								if (xhr_2.readyState == 4 && xhr_2.status == 200) {
+									var pos_arr = JSON.parse(xhr_2.responseText);
+									displayPosFunction(pos_arr);
+								}
+							};
+							xhr_2.open('GET', "{% url 'mugspot:position' %}", true);
+							xhr_2.send();
+							var marker_2;
+							var image = {
+								url: "{% static 'mugspot/red_dot_2.png' %}",
+								size: new google.maps.Size(30,30),
+								origin: new google.maps.Point(0,0),
+								anchor: new google.maps.Point(10,10), 
+							}
+
+							function displayPosFunction(posarr) {
+								var i;
+								for (i=0; i < posarr.length; i++) {
+									marker_2 = new google.maps.Marker({
+										position: {lat: posarr[i].fields.latitude, lng: posarr[i].fields.longitude},
+										map: map,
+										title: "hehe",
+										icon: image,
+									});
+								}
+							}
+
+							function geo_success(position) {
+							  var latitude = position.coords.latitude;
+							  var longitude = position.coords.longitude;
+							  var xhr = new XMLHttpRequest();
+							  var fd = new FormData();
+							  fd.append('lat', latitude);
+							  fd.append('lng', longitude);
+							  xhr.open('POST', "{% url 'mugspot:index' %}", true);
+							  function getCookie(name) {
+							      var cookieValue = null;
+							      if (document.cookie && document.cookie !== '') {
+							          var cookies = document.cookie.split(';');
+							          for (var i = 0; i < cookies.length; i++) {
+							              var cookie = jQuery.trim(cookies[i]);
+							              // Does this cookie string begin with the name we want?
+							              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							                  break;
+							              }
+							          }
+							      }
+							      return cookieValue;
+							  }
+							  var csrftoken = getCookie('csrftoken');
+							  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+							  xhr.send(fd);
+							}
+
+							function geo_error() {
+							  alert("Sorry, no position available.");
+							}
+
+							var geo_options = {
+							  enableHighAccuracy: true,
+							  timeout: 27000,
+							};
+
+							var check_login = new XMLHttpRequest();
+							check_login.onreadystatechange = function() {
+								if (check_login.readyState == 4 && check_login.status == 200) {
+									var login_indicator = JSON.parse(check_login.responseText);
+									obtain_position(login_indicator.indicator);
+								}
+							}
+							check_login.open('GET', "{% url 'mugspot:checklginjs' %}", true);
+							check_login.send();
+
+							function test_function_2(indicator) {
+								console.log(indicator);
+							}
+
+							function obtain_position(indicator) {
+								if (indicator == 1) {
+									navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
+								} 
+							}
+						}
+						</script>
+					</div>
+				</div>
 			</div>
-
-			<div class = "col-md-9">
-				<div class="row-md-3" style="overflow-x: scroll; overflow-y: scroll;background-color: #333333;">
-					<p style="font-size:23px; text-align: center; "> Mugging spots in {{ place }}</p>
-					<ul>
-						{% for place in list_places %}
-						<a href="{% url 'mugspot:index' place.id %}">{{ place.spot_name }}</a> <i class= "glyphicon glyphicon-option-vertical"> </i>
-						{% endfor %}
-					</ul>
-				</div>
-				<div class="row-md-9" style="overflow: scroll">
-
-		<div id="map"></div>
-		<script>
-		var map;
-		function initMap() {
-			map = new google.maps.Map(document.getElementById('map'), {
-				center: {lat: 1.306, lng: 103.773},
-				zoom: 18,
-			});
-
-			var xhr_2 = new XMLHttpRequest();
-			xhr_2.onreadystatechange = function() {
-				if (xhr_2.readyState == 4 && xhr_2.status == 200) {
-					var pos_arr = JSON.parse(xhr_2.responseText);
-					displayPosFunction(pos_arr);
-				}
-			};
-			xhr_2.open('GET', "{% url 'mugspot:position' %}", true);
-			xhr_2.send();
-			var marker_2;
-			var image = {
-				url: "{% static 'mugspot/red_dot_2.png' %}",
-				size: new google.maps.Size(30,30),
-				origin: new google.maps.Point(0,0),
-				anchor: new google.maps.Point(10,10), 
-			}
-
-			function displayPosFunction(posarr) {
-				var i;
-				for (i=0; i < posarr.length; i++) {
-					marker_2 = new google.maps.Marker({
-						position: {lat: posarr[i].fields.latitude, lng: posarr[i].fields.longitude},
-						map: map,
-						title: "hehe",
-						icon: image,
-					});
-				}
-			}
-
-			function geo_success(position) {
-			  var latitude = position.coords.latitude;
-			  var longitude = position.coords.longitude;
-			  var xhr = new XMLHttpRequest();
-			  var fd = new FormData();
-			  fd.append('lat', latitude);
-			  fd.append('lng', longitude);
-			  xhr.open('POST', "{% url 'mugspot:index' %}", true);
-			  function getCookie(name) {
-			      var cookieValue = null;
-			      if (document.cookie && document.cookie !== '') {
-			          var cookies = document.cookie.split(';');
-			          for (var i = 0; i < cookies.length; i++) {
-			              var cookie = jQuery.trim(cookies[i]);
-			              // Does this cookie string begin with the name we want?
-			              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                  break;
-			              }
-			          }
-			      }
-			      return cookieValue;
-			  }
-			  var csrftoken = getCookie('csrftoken');
-			  xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			  xhr.send(fd);
-			}
-
-			function geo_error() {
-			  alert("Sorry, no position available.");
-			}
-
-			var geo_options = {
-			  enableHighAccuracy: true,
-			  timeout: 27000,
-			};
-
-			var check_login = new XMLHttpRequest();
-			check_login.onreadystatechange = function() {
-				if (check_login.readyState == 4 && check_login.status == 200) {
-					var login_indicator = JSON.parse(check_login.responseText);
-					obtain_position(login_indicator.indicator);
-				}
-			}
-			check_login.open('GET', "{% url 'mugspot:checklginjs' %}", true);
-			check_login.send();
-
-			function test_function_2(indicator) {
-				console.log(indicator);
-			}
-
-			function obtain_position(indicator) {
-				if (indicator == 1) {
-					navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
-				} 
-			}
-		}
-		</script>
 		</div>
-		</div>
+
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
 		    async defer></script>
 		<!--jQuery first, then Bootstrap JS. -->
 	</body>
 </html>
+
 
 

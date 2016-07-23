@@ -5,513 +5,618 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title> Home</title>
+		<title> My Profile</title>
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<style>
-		#map {
-		    height: 800px;
-		}
-		.navbar-fixed-top {
-    		min-height: 90px;
-		}
-		#nav, #nav-inner, .nav-list, .nav-list-item a {
-			color: #fffff0;
-		}
-		.navbar-nav > li > a > {
-    		padding-top: 0px;
-    		padding-bottom: 0px;
-    		line-height: 90px;
-    		font-color: white;
-    		font-size: 40px;
-    		margin-left: 50px;
-   			margin-right: 50px;
-		}
-		.bottom-default {
-    		position: fixed;
-    		bottom: 10px;
-    		font-size: 10px;
-    		color: white;
-    		width: 100%;
-		}
-		.encourage{
-    		position: fixed;
-    		bottom: 40px;
-    		font-size: 23px;
-    		color: white;
-    		width: 100%;
+			#map {
+		    	height: 800px;
+			}
+			.navbar-fixed-top {
+    			min-height: 90px;
+			}
+			#nav, #nav-inner, .nav-list, .nav-list-item a {
+				color: #fffff0;
+			}
+			.panel {
+				text-align: center;
+				border: none;
+				overflow: scroll;
+			}
+			.panel > .panel-heading {
+				background-image: none;
+				background-color: #333333!important;
+				color: white;
+				border: none;
+			}
+			.panel > .panel-body {
+				background-image: none;
+				background-color: #F99027;
+				color: white;
+				border: none;
+				overflow-:scroll;
+			}
+			.navbar-nav > li > a > {
+    			padding-top: 0px;
+    			padding-bottom: 0px;
+    			line-height: 90px;
+    			font-color: white;
+    			font-size: 40px;
+    			margin-left: 50px;
+   				margin-right: 50px;
+			}
+			.btn {
+				border-radius: 50px;
+				background-image: none;
+				color: white;
+				padding:7px;
+				margin-bottom:20px;
+				right:0%;
+				-webkit-appearance:none;
+			}
+			.btn > a {
+				color:white;
+				text-decoration: none;
+			}
+			.bottom-default {
+    			position: fixed;
+    			bottom: 10px;
+    			font-size: 10px;
+    			color: white;
+    			width: 100%;
+    			text-align: center;
+			}
+			input[type] {
+    			width: 170px;
+    			border: 2px solid;
+    			border-color:#4F4D4B  ;
+    			font-size: 13px;
+    			background-color: white;
+    			padding: 2px 10px 2px 10px;
+                -webkit-transition: width 0.4s ease-in-out;
+    			transition: width 0.4s ease-in-out;
+    			margin-left:5px;  
+    			border-radius: 30px;
+    			color: black;
+    			display:inline;
+			}
+			a {
+				color: #4494E8  ;
+			}
+			body {
+      			background-color:#3683D5;
+      			width: 100%;
+      			height: 100%;
+				font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+				overflow: scroll;
+				color: white;
+    		}
+    		ul{
+  				list-style:none;
+			}
+			ul li{
+  				float:left;
+  				width:120%;
+  				padding:5px;
+  				margin-left: -40px;
+  				margin-right: 40px;
+  				text-align: left;
+  				font-size:12px;
+  				border:1px solid ;
+  				border-color: #F99027;
+  				background-color: #333333;
+			}
 
-		}
-		input[type=text] {
-    		width: 170px;
-    		border: 0;
-    		font-size: 13px;
-    		background-color: white;
-    		padding: 2px 10px 2px 10px;
-            -webkit-transition: width 0.4s ease-in-out;
-    		transition: width 0.4s ease-in-out;
-    		margin-left:15px; 
-    		margin-right:25px; 
-		}
-		a {
-			color: #4494E8  ;
-		}
-		body {
-      		background-color:#3683D5;
-      		width: 100%;
-      		height: 100%;
-			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-			overflow: scroll;
-			color: white;
-    	}
-    	ul{
-  			list-style:none;
-		}
-
-		ul li{
-  			float:left;
-  			width:117%;
-  			padding:10px;
-  			margin-left: -40px;
-  			margin-right: 40px;
-  			text-align: center;
-		}
-
-		ul li:nth-child(2n){
-  			background-color:#F99027;
-		}
-
-		ul li:nth-child(2n+1){
-  			clear:both;
-  			background-color:#333333;
-		}
+			tr {
+				padding-bottom: 5px;
+			}
 		</style>
 		<!-- Bootstrap CSS -->
 	</head>
 	<body>
 		{% load staticfiles %}
+		<!--Navigation bar-->
 		<nav class="navbar navbar-inverse">
 	  		<div class="container-fluid">
     			<div class="navbar-header">	
 					<a class="navbar-brand" href="{% url 'mugspot:index' %}"><img src="{% static 'mugspot/logo.png' %}" width="150" height="45" style="position: relative; top:-10px; "  alt="Logo"></a> 
 				</div>
     			<div class="nav navbar-nav">
-      				<li class="nav-item active"><a class="nav-link"c href = "{% url 'mugspot:index' %}">HOME</a></li>
-      				<li class="nav-item"><a class="nav-link" href="{% url 'mugspot:about' %}"> ABOUT </a></li>
+      				<li><a href = "{% url 'mugspot:index' %}">HOME</a></li>
+      				<li><a href="{% url 'mugspot:about' %}"> ABOUT </a></li>
     			</div>
-    			{% if user_indicator == 1 %}
+    			
     			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> WELCOME,<a href="{% url 'mugspot:user_profile_view' user.id %}">{{ stalker.username }}</a>!</li>
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:logout' %}"> LOGOUT</a> </li>
+        			<li class="active"> <a href="{% url 'mugspot:user_profile_view' user_prof.id %}"> MY PROFILE &nbsp; <span class="glyphicon glyphicon-menu-hamburger"></span></a> </li>
       			</div>
-      			{% else %}
-    			<div class="nav navbar-nav navbar-right">
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:register' %}" > REGISTER</a> </li>
-      				<li class="nav-item"> <a class="nav-link" href="{% url 'mugspot:login' %}"> LOGIN</a> </li>
-      			</div>
-      			{% endif %}
+      		
   			</div>
 		</nav>
-		<div class="container-fluid">
-			<div class = "col-md-3">
-			   	<p style="font-size:23px; text-align: center;"> Live Update </p>
-				<div id="live_update"> <!--Live update list-->
-					<ul>
-					{% for live_update_element in live_update_list %}
-						{% if live_update_element.place == null and live_update_element.status == True %}
-						<li>
-							{{ live_update_element.username }} just entered a new MugSpot!
-						</li>
-						{% elif live_update_element.place == null and live_update_element.status != True %}
-						<li>
-							{{ live_update_element.username }} just left a new MugSpot!
-						</li>
-						{% elif live_update_element.place != null and live_update_element.status != True %}
-						<li>
-							{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
-						</li>
+				
+		<!--Split webpage into 2 portions horizontally, ratio: 3:9-->
+		<div class="row">
+			<div class="container-fluid">
+				<div class = "col-md-3" style="padding:0px;">
+					<div class="container-fluid">
+						<!--Live update panel-->
+						{% if user_indicator == 0 %}
+						<div class="panel panel-default" style="height:310px;" >
+							<div class="panel-heading"> Live Update </div>
+							<div class="panel-body">
+								<div id="live_update"> <!--Live update list-->
+									<ul>
+									{% for live_update_element in live_update_list %}
+										{% if live_update_element.place == null and live_update_element.status == True %}
+										<li>
+											{{ live_update_element.username }} just entered a new MugSpot!
+										</li>
+											{% elif live_update_element.place == null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left a new MugSpot!
+										</li>
+											{% elif live_update_element.place != null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
+										</li>
+											{% else %}
+										<li>
+											{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
+										</li>
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--Friend update panel-->
+						<div class="panel panel-default" style ="height:310px;">
+							<div class="panel-heading"> Friend Update </div>
+							<div class="panel-body">
+								<div id="friend_update"> <!-- List of all friends updates on locations -->
+									<ul>
+										{% for friend_update in friend_update_list %}
+										{% if friend_update.mug_spot == "" and friend_update.status == True %}
+										<li>
+											{{ friend_update.sender.username }} just entered a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+										</li>
+										{% else %}
+										<li>
+											{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+										</li>
+										{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+
 						{% else %}
-						<li>
-							{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
-						</li>
-						{% endif %}
-					{% endfor %}
-					</ul>
-				</div>
-
-				<div id="friend_update"> <!-- List of all friends updates on locations -->
-					<ul>
-						{% for friend_update in friend_update_list %}
-							{% if friend_update.mug_spot == "" and friend_update.status == True %}
-							<li>
-								{{ friend_update.sender.username }} just entered a new Mug Spot!
-							</li>
-							{% elif friend_update.mug_spot == "" and friend_update.status != True %}
-							<li>
-								{{ friend_update.sender.username }} just left a new Mug Spot!
-							</li>
-							{% elif friend_update.mug_spot != "" and friend_update.status != True %}
-							<li>
-								{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
-							</li>
-							{% else %}
-							<li>
-								{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
-							</li>
-							{% endif %}
-						{% endfor %}
-					</ul>
-				</div>
-
-			   	<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
-
-		<div id="myLocation"> <!-- I am currently at (box to type location in) -->
-			I am currently at 
-			<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
-				{% csrf_token %}
-				{{ location_form.non_field_errors }} <!--need location form + form handling-->
-				<div class="fieldWrapper">
-					{{ location_form.location_name.errors }}
-					<label for="{{ location_form.location_name.id_for_label }}"></label>
-					{{ location_form.location_name }}
-				</div>
-				<button type="submit"  value="submit_location" class="btn btn-danger btn-sm">Submit</button>
-			</form>
-		</div>
-
-		<!--Tell others I'm here & tell others I've left buttons are here-->
-		<div class="btn-group btn-group-lg" role="group" aria-label="...">
-			<button type="button" class="btn btn-default"><a href="{% url 'mugspot:tellfriendsview' %}">Tell your fiends you're here!</a></button>
-			<button type="button" class="btn btn-default"><a href="{% url 'mugspot:tellfriendsview' %}">Tell your friends you've left!</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
-		</div>
-
-		<!-- User account info editting here -->
-		{% if stalker.username == user_prof.username %}
-		<p>{{ user_prof.username }} account information</p>
-		<div id="myAccountInfo">
-			<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
-				{{ account_form.non_field_errors }}
-				<table>
-					<tr>
-						<div class="fieldWrapper">
-							{{ account_form.user_name.errors }}
-							<label for="{{ account_form.user_name.id_for_label }}"></label>
-							{{ account_form.user_name }}
+						<div class="panel panel-default" style="height:220px;" >
+							<div class="panel-heading"> Live Update </div>
+							<div class="panel-body">
+								<div id="live_update"> <!--Live update list-->
+									<ul>
+									{% for live_update_element in live_update_list %}
+										{% if live_update_element.place == null and live_update_element.status == True %}
+										<li>
+											{{ live_update_element.username }} just entered a new MugSpot!
+										</li>
+											{% elif live_update_element.place == null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left a new MugSpot!
+										</li>
+											{% elif live_update_element.place != null and live_update_element.status != True %}
+										<li>
+											{{ live_update_element.username }} just left {{ live_update_element.place.spot_name }}!
+										</li>
+											{% else %}
+										<li>
+											{{ live_update_element.username }} just entered {{ live_update_element.place.spot_name }}!
+										</li>
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
 						</div>
-					</tr>
-					<tr>
-						<div class="fieldWrapper">
-							{{ account_form.user_email.errors }}
-							<label for="{{ account_form.user_email.id_for_label }}"></label>
-							{{ account_form.user_email }}
+						<!--Friend update panel-->
+						<div class="panel panel-default" style ="height:220px;">
+							<div class="panel-heading"> Friend Update </div>
+							<div class="panel-body">
+								<div id="friend_update"> <!-- List of all friends updates on locations -->
+									<ul>
+										{% for friend_update in friend_update_list %}
+										{% if friend_update.mug_spot == "" and friend_update.status == True %}
+										<li>
+											{{ friend_update.sender.username }} just entered a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+										</li>
+										{% else %}
+										<li>
+											{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+										</li>
+										{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>						
+						<div id="myLocation"> <!-- I am currently at (box to type location in) -->
+							<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
+								{% csrf_token %}
+								{{ location_form.non_field_errors }} <!--need location form + form handling-->
+								<div class="fieldWrapper">
+									{{ location_form.location_name.errors }}
+									<label> I am currently at: </label>
+									<input type="text" value="{{ location_form.location_name }}" placeholder="Your location..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your location...'" />
+								</div>
+							</form>
 						</div>
-					</tr>
-					<tr>
-						<div class="fieldWrapper">
-							{{ account_form.user_faculty.errors }}
-							<label for="{{ account_form.user_faculty.id_for_label }}"></label>
-							{{ account_form.user_faculty }}
-						</div>
-					</tr>
-				</table>
-				<p class="bs-component">
-					<center> 
-						<button type="submit"  value="confirm_change" class="btn btn-danger btn-sm">Confirm Changes</button>
-					</center>
-				</p>
-			</form>
-		</div>
-		{% endif %}
+						<br>
 
-		<!--FriendList displayed here-->
-		<p>All friends</p>
-		<div id="friendlist">
-			<ul>
-				{% for friend in friend_list %}
-					<li>
-						<a href="{% url 'mugspot:user_profile_view' friend.user.id %}">{{ friend.user.username }}</a>
-					</li>
-				{% endfor %}
-			</ul>
-		</div>
-
-		<!--Friend requests list displayed here, but have not completed -->
-		{% if stalker.username == user_prof.username %}
-		<p>All friend requests</p>
-		<div id="friend_request_list">
-			<ul>
-				{% for request in friend_request_list %}
-					<li>
-						{{ request.sender.username }} would like to befriend you!
+						<!--Tell others you are here/ have left-->
+						
 						<div class="btn-group btn-group-sm" role="group" aria-label="...">
-							<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="acceptRequest(this);">Accept</button>
-							<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="deleteRequest(this);">Delete</button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+							<button type="button" class="btn btn-secondary" style="background-color: #F99027"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you're here!</a></button>
+							<button type="button" class="btn btn-secondary" style="background-color: #333333;"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you've left!</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
 						</div>
-					</li>
-				{% endfor %}
-			</ul>
+
+						<!--Logout button-->
+						<button type="button" class="btn" style="background-color:#B62E06; margin-left:40%;"> <a href="{% url 'mugspot:logout' %}"> Logout </a></button>
+					
+						{% endif %}
+						<!--Copyright-->
+				   		<div class="bottom-default"> &copy; 2016 by Cat&Mouse. Bostok Project, Orbital 2016, NUS. </div>
+					</div>
+				</div>
+		
+			<div class = "col-md-9" style="padding-left:0px">
+			{% if stalker.username == user_prof.username %}
+
+				<p>Account Details</p>
+							<div id="myAccountInfo">
+								<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
+									{{ account_form.non_field_errors }}
+									<table>
+										<tr>
+											<div class="fieldWrapper">
+												{{ account_form.user_name.errors }}
+												<label for="{{ account_form.user_name.id_for_label }}">User name:</label>
+												{{ account_form.user_name }}
+											</div>
+										</tr>
+										<tr>
+											<div class="fieldWrapper">
+												{{ account_form.user_email.errors }}
+												<label for="{{ account_form.user_email.id_for_label }}">User email:</label>
+												{{ account_form.user_email }}
+											</div>
+										</tr>
+										<tr>
+											<div class="fieldWrapper">
+												{{ account_form.user_faculty.errors }}
+												<label for="{{ account_form.user_faculty.id_for_label }}">User faculty:</label>
+												{{ account_form.user_faculty }}
+											</div>
+										</tr>
+									</table>
+									<p class="bs-component">
+										<center> 
+											<button type="submit"  value="confirm_change" class="btn btn-danger btn-sm">Confirm Changes</button>
+										</center>
+									</p>
+								</form>
+							</div>
+							{% endif %}
+
+							<!--FriendList displayed here-->
+							<p>All friends</p>
+							<div id="friendlist">
+								<ul>
+									{% for friend in friend_list %}
+										<li>
+											<a href="{% url 'mugspot:user_profile_view' friend.user.id %}">{{ friend.user.username }}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+
+							<!--Friend requests list displayed here, but have not completed -->
+							{% if stalker.username == user_prof.username %}
+							<p>All friend requests</p>
+							<div id="friend_request_list">
+								<ul>
+									{% for request in friend_request_list %}
+										<li>
+											{{ request.sender.username }} would like to befriend you!
+											<div class="btn-group btn-group-sm" role="group" aria-label="...">
+												<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="acceptRequest(this);">Accept</button>
+												<button type="button" id="{{ request.sender.username }}" class="btn btn-default" onclick="deleteRequest(this);">Delete</button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+											</div>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+
+							<!-- Add friend button goes here -->
+							{% if stalker.username != user_prof.username %}
+								{% if addfriend_indicator == 0 %}
+									<div id="addFriendArea">
+										<button type="button" id="addFriendButton" onclick="createRequest();"><div id="addfriendsender">{{ stalker.username }}</div>, you can add <div id="addfriendreceiver">{{ user_prof.username }}</div> as a friend!</button>
+									</div>
+								{% elif addfriend_indicator == 1 %}
+									<div id="addFriendArea">
+										<button type="button" id="{{ user_prof.username }}" onclick="undoRequest(this.id);">Cancel request</button>
+									</div>
+								{% elif addfriend_indicator == 2 %}
+									<div id="addFriendArea">
+										<button type="button" id="{{ user_prof.username }}">Already your friend!</button>
+									</div>
+								{% endif %}
+							{% endif %}
+
+					<!-- Include javascript files here -->
+					<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+					<script>
+
+
+					$('#accInfoForm').on('submit', function(event){
+						event.preventDefault();
+						console.log("form submitted!");
+						update_account();
+					})
+
+					function acceptRequest(user_name) {
+						console.log("Accepting friend request is working!");
+						console.log(user_name.id);
+						
+						var xhr = new XMLHttpRequest();
+						var fd = new FormData();
+						fd.append('user_name',user_name.id);
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var response = xhr.responseText;
+								testing_2(response);
+							}
+						}
+						function testing_2(res_obj) {
+							console.log(res_obj);
+						}
+						xhr.open('POST', "{% url 'mugspot:accept_request_view' %}", true);
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = jQuery.trim(cookies[i]);
+						            // Does this cookie string begin with the name we want?
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+						var csrftoken = getCookie('csrftoken');
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+						xhr.send(fd);
+						
+					}
+
+					function deleteRequest(user_name) {
+						console.log("Deleting friend request is working!");
+						console.log(user_name.id);
+						var xhr = new XMLHttpRequest();
+						var fd = new FormData();
+						fd.append('user_name',user_name.id);
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var response = xhr.responseText;
+								testing_2(response);
+							}
+						}
+						function testing_2(res_obj) {
+							console.log(res_obj);
+						}
+						xhr.open('POST', "{% url 'mugspot:delete_request_view' %}", true);
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = jQuery.trim(cookies[i]);
+						            // Does this cookie string begin with the name we want?
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+						var csrftoken = getCookie('csrftoken');
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+						xhr.send(fd);
+					}
+
+					function undoRequest(button) {
+						console.log("undoRequest is starting!")
+						var xhr = new XMLHttpRequest();
+						var fd = new FormData();
+						fd.append('receiver_name',button);
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var response = JSON.parse(xhr.responseText); /* Will probably need a json response here */
+								testing_2(response);
+							}
+						}
+						function testing_2(res_obj) {
+							console.log(res_obj);
+							var sender_name = res_obj.sender;
+							var receiver_name = res_obj.receiver;
+							var parent = document.getElementById("addFriendArea");
+							var child = parent.children[0]; /* The cancel request button */
+							var add_request = document.createElement("button");
+							add_request.type = "button";
+							add_request.className = "btn btn-default";
+							add_request.id = "addFriendButton";
+							var sender = document.createElement("div");
+							var receiver = document.createElement("div");
+							var sender_text = document.createTextNode(sender_name);
+							var receiver_text = document.createTextNode(receiver_name);
+							sender.id = "addfriendsender";
+							receiver.id = "addfriendreceiver";
+							sender.appendChild(sender_text);
+							receiver.appendChild(receiver_text);
+							var text_1 = document.createTextNode(", you can add ");
+							var text_2 = document.createTextNode(" as a friend!");
+							add_request.appendChild(sender);
+							add_request.appendChild(text_1);
+							add_request.appendChild(receiver);
+							add_request.appendChild(text_2);
+							add_request.onclick = function() {
+								createRequest();
+							}
+							parent.replaceChild(add_request,child);
+						}
+						xhr.open('POST', "{% url 'mugspot:undo_request_view' %}", true);
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = jQuery.trim(cookies[i]);
+						            // Does this cookie string begin with the name we want?
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+						var csrftoken = getCookie('csrftoken');
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+						xhr.send(fd);
+					}
+
+					function createRequest() {
+						console.log("Creating friend request is working!");
+						console.log($("#addfriendsender").text());
+						console.log($("#addfriendreceiver").text());
+						var xhr = new XMLHttpRequest();
+						var fd = new FormData();
+						fd.append('sender',$("#addfriendsender").text());
+						fd.append('receiver',$("#addfriendreceiver").text());
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var response = xhr.responseText;
+								testing_2(response);
+							}
+						}
+						function testing_2(res_obj) {
+							console.log(res_obj);
+							var prof_name = $("#addfriendreceiver").text();
+							var parent = document.getElementById("addFriendArea");
+							var child = document.getElementById("addFriendButton");
+							var cancel_request = document.createElement("button");
+							cancel_request.type = "button";
+							cancel_request.className = "btn btn-default";
+							cancel_request.id = prof_name;
+							cancel_request.onclick = function() {
+								undoRequest(prof_name);
+							}
+							var cancel_request_text = document.createTextNode("Cancel request")
+							cancel_request.appendChild(cancel_request_text);
+							parent.replaceChild(cancel_request,child);
+						}
+						xhr.open('POST', "{% url 'mugspot:create_request_view' %}", true);
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = jQuery.trim(cookies[i]);
+						            // Does this cookie string begin with the name we want?
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+						var csrftoken = getCookie('csrftoken');
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+						xhr.send(fd);
+						
+					}
+
+					function update_account() {
+						console.log("Update account is working!");
+						var xhr = new XMLHttpRequest();
+						var fd = new FormData();
+						fd.append('user_name',$('#User-username').val());
+						fd.append('user_email',$('#User-useremail').val());
+						fd.append('user_faculty',$('#User-userfaculty').val());
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4 && xhr.status == 200) {
+								var response = xhr.responseText;
+								testing_2(response);
+							}
+						}
+						function testing_2(res_obj) {
+							console.log(res_obj);
+						}
+						xhr.open('POST', "{% url 'mugspot:update_account_view' %}", true);
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = jQuery.trim(cookies[i]);
+						            // Does this cookie string begin with the name we want?
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+						var csrftoken = getCookie('csrftoken');
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+						xhr.send(fd);
+					}
+					</script>
+					</div>		
+				</div>
+			</div>
 		</div>
-		{% endif %}
 
-		<!-- Add friend button goes here -->
-		{% if stalker.username != user_prof.username %}
-			{% if addfriend_indicator == 0 %}
-				<div id="addFriendArea">
-					<button type="button" id="addFriendButton" onclick="createRequest();"><div id="addfriendsender">{{ stalker.username }}</div>, you can add <div id="addfriendreceiver">{{ user_prof.username }}</div> as a friend!</button>
-				</div>
-			{% elif addfriend_indicator == 1 %}
-				<div id="addFriendArea">
-					<button type="button" id="{{ user_prof.username }}" onclick="undoRequest(this.id);">Cancel request</button>
-				</div>
-			{% elif addfriend_indicator == 2 %}
-				<div id="addFriendArea">
-					<button type="button" id="{{ user_prof.username }}">Already your friend!</button>
-				</div>
-			{% endif %}
-		{% endif %}
 
-		<!-- Include javascript files here -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-		<script>
-
-
-		$('#accInfoForm').on('submit', function(event){
-			event.preventDefault();
-			console.log("form submitted!");
-			update_account();
-		})
-
-		function acceptRequest(user_name) {
-			console.log("Accepting friend request is working!");
-			console.log(user_name.id);
-			
-			var xhr = new XMLHttpRequest();
-			var fd = new FormData();
-			fd.append('user_name',user_name.id);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = xhr.responseText;
-					testing_2(response);
-				}
-			}
-			function testing_2(res_obj) {
-				console.log(res_obj);
-			}
-			xhr.open('POST', "{% url 'mugspot:accept_request_view' %}", true);
-			function getCookie(name) {
-			    var cookieValue = null;
-			    if (document.cookie && document.cookie !== '') {
-			        var cookies = document.cookie.split(';');
-			        for (var i = 0; i < cookies.length; i++) {
-			            var cookie = jQuery.trim(cookies[i]);
-			            // Does this cookie string begin with the name we want?
-			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                break;
-			            }
-			        }
-			    }
-			    return cookieValue;
-			}
-			var csrftoken = getCookie('csrftoken');
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			xhr.send(fd);
-			
-		}
-
-		function deleteRequest(user_name) {
-			console.log("Deleting friend request is working!");
-			console.log(user_name.id);
-			var xhr = new XMLHttpRequest();
-			var fd = new FormData();
-			fd.append('user_name',user_name.id);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = xhr.responseText;
-					testing_2(response);
-				}
-			}
-			function testing_2(res_obj) {
-				console.log(res_obj);
-			}
-			xhr.open('POST', "{% url 'mugspot:delete_request_view' %}", true);
-			function getCookie(name) {
-			    var cookieValue = null;
-			    if (document.cookie && document.cookie !== '') {
-			        var cookies = document.cookie.split(';');
-			        for (var i = 0; i < cookies.length; i++) {
-			            var cookie = jQuery.trim(cookies[i]);
-			            // Does this cookie string begin with the name we want?
-			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                break;
-			            }
-			        }
-			    }
-			    return cookieValue;
-			}
-			var csrftoken = getCookie('csrftoken');
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			xhr.send(fd);
-		}
-
-		function undoRequest(button) {
-			console.log("undoRequest is starting!")
-			var xhr = new XMLHttpRequest();
-			var fd = new FormData();
-			fd.append('receiver_name',button);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = JSON.parse(xhr.responseText); /* Will probably need a json response here */
-					testing_2(response);
-				}
-			}
-			function testing_2(res_obj) {
-				console.log(res_obj);
-				var sender_name = res_obj.sender;
-				var receiver_name = res_obj.receiver;
-				var parent = document.getElementById("addFriendArea");
-				var child = parent.children[0]; /* The cancel request button */
-				var add_request = document.createElement("button");
-				add_request.type = "button";
-				add_request.className = "btn btn-default";
-				add_request.id = "addFriendButton";
-				var sender = document.createElement("div");
-				var receiver = document.createElement("div");
-				var sender_text = document.createTextNode(sender_name);
-				var receiver_text = document.createTextNode(receiver_name);
-				sender.id = "addfriendsender";
-				receiver.id = "addfriendreceiver";
-				sender.appendChild(sender_text);
-				receiver.appendChild(receiver_text);
-				var text_1 = document.createTextNode(", you can add ");
-				var text_2 = document.createTextNode(" as a friend!");
-				add_request.appendChild(sender);
-				add_request.appendChild(text_1);
-				add_request.appendChild(receiver);
-				add_request.appendChild(text_2);
-				add_request.onclick = function() {
-					createRequest();
-				}
-				parent.replaceChild(add_request,child);
-			}
-			xhr.open('POST', "{% url 'mugspot:undo_request_view' %}", true);
-			function getCookie(name) {
-			    var cookieValue = null;
-			    if (document.cookie && document.cookie !== '') {
-			        var cookies = document.cookie.split(';');
-			        for (var i = 0; i < cookies.length; i++) {
-			            var cookie = jQuery.trim(cookies[i]);
-			            // Does this cookie string begin with the name we want?
-			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                break;
-			            }
-			        }
-			    }
-			    return cookieValue;
-			}
-			var csrftoken = getCookie('csrftoken');
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			xhr.send(fd);
-		}
-
-		function createRequest() {
-			console.log("Creating friend request is working!");
-			console.log($("#addfriendsender").text());
-			console.log($("#addfriendreceiver").text());
-			var xhr = new XMLHttpRequest();
-			var fd = new FormData();
-			fd.append('sender',$("#addfriendsender").text());
-			fd.append('receiver',$("#addfriendreceiver").text());
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = xhr.responseText;
-					testing_2(response);
-				}
-			}
-			function testing_2(res_obj) {
-				console.log(res_obj);
-				var prof_name = $("#addfriendreceiver").text();
-				var parent = document.getElementById("addFriendArea");
-				var child = document.getElementById("addFriendButton");
-				var cancel_request = document.createElement("button");
-				cancel_request.type = "button";
-				cancel_request.className = "btn btn-default";
-				cancel_request.id = prof_name;
-				cancel_request.onclick = function() {
-					undoRequest(prof_name);
-				}
-				var cancel_request_text = document.createTextNode("Cancel request")
-				cancel_request.appendChild(cancel_request_text);
-				parent.replaceChild(cancel_request,child);
-			}
-			xhr.open('POST', "{% url 'mugspot:create_request_view' %}", true);
-			function getCookie(name) {
-			    var cookieValue = null;
-			    if (document.cookie && document.cookie !== '') {
-			        var cookies = document.cookie.split(';');
-			        for (var i = 0; i < cookies.length; i++) {
-			            var cookie = jQuery.trim(cookies[i]);
-			            // Does this cookie string begin with the name we want?
-			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                break;
-			            }
-			        }
-			    }
-			    return cookieValue;
-			}
-			var csrftoken = getCookie('csrftoken');
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			xhr.send(fd);
-			
-		}
-
-		function update_account() {
-			console.log("Update account is working!");
-			var xhr = new XMLHttpRequest();
-			var fd = new FormData();
-			fd.append('user_name',$('#User-username').val());
-			fd.append('user_email',$('#User-useremail').val());
-			fd.append('user_faculty',$('#User-userfaculty').val());
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = xhr.responseText;
-					testing_2(response);
-				}
-			}
-			function testing_2(res_obj) {
-				console.log(res_obj);
-			}
-			xhr.open('POST', "{% url 'mugspot:update_account_view' %}", true);
-			function getCookie(name) {
-			    var cookieValue = null;
-			    if (document.cookie && document.cookie !== '') {
-			        var cookies = document.cookie.split(';');
-			        for (var i = 0; i < cookies.length; i++) {
-			            var cookie = jQuery.trim(cookies[i]);
-			            // Does this cookie string begin with the name we want?
-			            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-			                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-			                break;
-			            }
-			        }
-			    }
-			    return cookieValue;
-			}
-			var csrftoken = getCookie('csrftoken');
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			xhr.send(fd);
-		}
-		</script>
-		<!--
-		{% block js %}
-			<script src="{% static 'mugspot/userprofile.js' %}"></script>
-		{% endblock %} -->
-
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2l43VeoX5VkBh4bSXuoIRSZbzK5_YeZk&callback=initMap"
+		    async defer></script>
 		<!--jQuery first, then Bootstrap JS. -->
 	</body>
 </html>
