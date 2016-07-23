@@ -20,4 +20,5 @@ urlpatterns = [
 	url(r'^crv/$', views.create_request_view, name='create_request_view'),
 	url(r'^urv/$', views.undo_request_view, name='undo_request_view'),
 	url(r'^updacc/$', views.update_account_view, name='update_account_view'),
+	url(r'^epv/(?P<user_id>[0-9]+)/$', views.edit_profile_view, name='edit_profile_view'),
 ]

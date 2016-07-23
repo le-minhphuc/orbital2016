@@ -27,9 +27,10 @@ class UserLoginForm(forms.Form):
 	user_password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'style': 'width:100%;height:20px;border-radius:30px;border:0px;'}), max_length=200)
 
 class AccountDetailForm(forms.Form):
-	user_name = forms.CharField(label='Username', max_length=200)
-	user_email = forms.EmailField(label='Email', max_length=254)
-	user_faculty = forms.CharField(label='Faculty', max_length=200)
+	user_name = forms.CharField(label='Username', max_length=200, disabled=True)
+	user_email = forms.EmailField(label='Email', max_length=254, disabled=True)
+	user_faculty = forms.CharField(label='Faculty', max_length=200, disabled=True)
+	
 	class Meta:
 		model = User # Specify the model that this form is related to? 
 		fields = ['user_name', 'user_email', 'user_faculty']

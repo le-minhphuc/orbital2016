@@ -240,46 +240,47 @@
 								<div id="friend_update"> <!-- List of all friends updates on locations -->
 									<ul>
 										{% for friend_update in friend_update_list %}
-											{% if friend_update.mug_spot == "" and friend_update.status == True %}
-											<li>
-												{{ friend_update.sender.username }} just entered a new Mug Spot!
-											</li>
-											{% elif friend_update.mug_spot == "" and friend_update.status != True %}
-											<li>
-												{{ friend_update.sender.username }} just left a new Mug Spot!
-											</li>
-											{% elif friend_update.mug_spot != "" and friend_update.status != True %}
-											<li>
-												{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
-											</li>
-											{% else %}
-											<li>
-												{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
-											</li>
-											{% endif %}
+										{% if friend_update.mug_spot == "" and friend_update.status == True %}
+										<li>
+											{{ friend_update.sender.username }} just entered a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot == "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left a new Mug Spot!
+										</li>
+										{% elif friend_update.mug_spot != "" and friend_update.status != True %}
+										<li>
+											{{ friend_update.sender.username }} just left {{ friend_update.mug_spot }}!
+										</li>
+										{% else %}
+										<li>
+											{{ friend_update.sender.username }} just entered {{ friend_update.mug_spot }}!
+										</li>
+										{% endif %}
 										{% endfor %}
 									</ul>
 								</div>
 							</div>
 						</div>						
 						<div id="myLocation"> <!-- I am currently at (box to type location in) -->
-							<form action="{% url 'mugspot:tellfriendsview' %}" method="POST">
+							<form action="{% url 'mugspot:user_profile_view' %}" method="POST">
 								{% csrf_token %}
 								{{ location_form.non_field_errors }} <!--need location form + form handling-->
 								<div class="fieldWrapper">
 									{{ location_form.location_name.errors }}
 									<label> I am currently at: </label>
-									{{ location_form.location_name }}
-								</div>
-								<div class="btn-group btn-group-sm" role="group" aria-label="...">
-									<button type="submit" name="yes" value="1" class="btn btn-secondary" style="background-color: #F99027">Tell others you're here!</button>
-									<button type="submit" name="no" value="2" class="btn btn-secondary" style="background-color: #333333;">Tell others you've left!</button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+									<input type="text" value="location_name" placeholder="Your location..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your location...'" />
 								</div>
 							</form>
 						</div>
 						<br>
 
 						<!--Tell others you are here/ have left-->
+						
+						<div class="btn-group btn-group-sm" role="group" aria-label="...">
+							<button type="button" class="btn btn-secondary" style="background-color: #F99027"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you're here!</a></button>
+							<button type="button" class="btn btn-secondary" style="background-color: #333333;"><a href="{% url 'mugspot:tellfriendsview' %}">Tell others you've left!</a></button> <!--Construct additional javascript and tellfriendsview to handle this telling thingy + tell the user success!-->
+						</div>
 
 						<!--Logout button-->
 						<button type="submit" class="btn" style="background-color:#B62E06; margin-left:40%;"> <a href="{% url 'mugspot:logout' %}"> Logout </a></button>
@@ -297,7 +298,8 @@
 				<div class="box">
 					<h4> <b> ACCOUNT DETAILS </b></h4> <br>
 					<div id="myAccountInfo">
-						<form action="{% url 'mugspot:user_profile_view' %}" method="POST" id="accInfoForm">
+						<form action="{% url 'mugspot:update_account_view' %}" method="POST" id="accInfoForm">
+							{% csrf_token %}
 							{{ account_form.non_field_errors }}
 							<table align="center">
 								<col style="width:30%">
@@ -334,7 +336,7 @@ glyphicon glyphicon-pencil" size="50%"> </span></td>
 
 							<p class="bs-component">
 								<center> 
-									<button type="submit" class="btn" value="confirm_change" style="background-color:#B62E06;"><a href="{% url 'mugspot:edit_profile_view' user_prof.id %}">Edit your information</a></button>
+									<button type="submit" class="btn" value="confirm_change" style="background-color:#B62E06;">Confirm changes</button>
 								</center>
 							</p>
 						</form>
@@ -425,14 +427,6 @@ glyphicon glyphicon-pencil" size="50%"> </span></td>
 					<!-- Include javascript files here -->
 					<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 					<script>
-
-
-					$('#accInfoForm').on('submit', function(event){
-						event.preventDefault();
-						console.log("form submitted!");
-						update_account();
-					})
-
 					function acceptRequest(user_name) {
 						console.log("Accepting friend request is working!");
 						console.log(user_name.id);
@@ -618,43 +612,6 @@ glyphicon glyphicon-pencil" size="50%"> </span></td>
 						xhr.setRequestHeader("X-CSRFToken", csrftoken);
 						xhr.send(fd);
 						
-					}
-
-					function update_account() {
-						console.log("Update account is working!");
-						var xhr = new XMLHttpRequest();
-						var fd = new FormData();
-						fd.append('user_name',$('#User-username').val());
-						fd.append('user_email',$('#User-useremail').val());
-						fd.append('user_faculty',$('#User-userfaculty').val());
-						xhr.onreadystatechange = function() {
-							if (xhr.readyState == 4 && xhr.status == 200) {
-								var response = xhr.responseText;
-								testing_2(response);
-							}
-						}
-						function testing_2(res_obj) {
-							console.log(res_obj);
-						}
-						xhr.open('POST', "{% url 'mugspot:update_account_view' %}", true);
-						function getCookie(name) {
-						    var cookieValue = null;
-						    if (document.cookie && document.cookie !== '') {
-						        var cookies = document.cookie.split(';');
-						        for (var i = 0; i < cookies.length; i++) {
-						            var cookie = jQuery.trim(cookies[i]);
-						            // Does this cookie string begin with the name we want?
-						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						                break;
-						            }
-						        }
-						    }
-						    return cookieValue;
-						}
-						var csrftoken = getCookie('csrftoken');
-						xhr.setRequestHeader("X-CSRFToken", csrftoken);
-						xhr.send(fd);
 					}
 					</script>
 				</div>	

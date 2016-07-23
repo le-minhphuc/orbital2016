@@ -101,16 +101,19 @@ def user_profile_view(request, user_id=0):
 	# show a form with data from database for 'GET' request
 	if request.method == 'GET':
 		person = Person.objects.filter(user=user)[0]
-		account_form = AccountDetailForm() # Display user account detail
-		account_form.user_name = user.username
-		account_form.user_email = user.email
-		account_form.user_faculty = person.faculty
+		account_form = AccountDetailForm(initial={
+			'user_name': user.username,
+			'user_email': user.email,
+			'user_faculty': person.faculty,
+		}) # Display user account detail
 
 		location_form = LocationForm() # Display location box for user to type into
 
 		live_update_list = LiveUpdate.objects.all().order_by('date_time') # Display live update list
 
 		friend_update_list = FriendUpdate.objects.filter(receiver=user).order_by('date_time') # Display friend update list
+		if len(friend_update_list) > 20:
+			friend_update_list = friend_update_list[:20]
 
 		friend_request_list = FriendRequest.objects.filter(receiver=user).order_by('-date_time') # Display friend request list
 
@@ -220,7 +223,19 @@ def check_login_js_view(request):
 	return response
 
 def update_friends_view(request):
-	pass
+	if request.method == 'POST':
+		user = request.user
+		person_user = Person.objects.filter(user=user)[0]
+		friendlist = person_user.friends.all()
+		if request.POST.get("yes") == 1:
+			for friend in friendlist:
+				request = FriendUpdate(sender=user,receiver=friend.user,mug_spot=request.POST.get('location_name'))
+				request.save()
+		else:
+			for friend in friendlist:
+				request = FriendUpdate(sender=user,receiver=friend.user,mug_spot=request.POST.get('location_name'),status=False)
+				request.save()
+		return HttpResponseRedirect(reverse('mugspot:user_profile_view', kwargs={'user_id': user.id}))
 
 def accept_request_view(request):
 	user = request.user
@@ -277,12 +292,73 @@ def undo_request_view(request):
 def update_account_view(request):
 	user = request.user
 	if request.method == 'POST':
-		user.username = request.POST.get('user_name')
-		user.email = request.POST.get('user_email')
-		person = Person.objects.filter(user=user)[0]
-		person.faculty = request.POST.get('user_faculty')
-		user.save()
-		person.save()
-		return HttpResponse("Success!")
+			# create a form instance and populate it with data from the request
+			person = Person.objects.filter(user=user)[0]
+			user.username = request.POST.get('user_name')
+			user.email = request.POST.get('user_email')
+			person.faculty = request.POST.get('user_faculty')
+			user.save()
+			person.save()
+			return HttpResponseRedirect(reverse('mugspot:user_profile_view', kwargs={'user_id': user.id}))
+		# if a GET (or any other method) we'll create a blank form
+	else:
+		return HttpResponse("Go away guys! Nothing to see here! :P")
 
+def edit_profile_view(request, user_id=0):
+	""" Handle request for user's account edit page """
+	user = User.objects.filter(id=user_id)[0]
+	stalker = request.user
+	if stalker != user:
+		return HttpResponse("Go away guys, nothing to see here!")
+	else:
+		user_indicator = 0 # Used to check if the user is logged in 
+		if (stalker.is_authenticated()):
+			user_indicator = 1
+		else:
+			user_indicator = 0
+		# show a form with data from database for 'GET' request
+		if request.method == 'GET':
+			person = Person.objects.filter(user=user)[0]
+			account_form = AccountDetailForm(initial={
+				'user_name': user.username,
+				'user_email': user.email,
+				'user_faculty': person.faculty,
+			}) # Display user account detail
+			account_form.fields['user_name'].disabled = False
+			account_form.fields['user_email'].disabled = False
+			account_form.fields['user_faculty'].disabled = False
+
+			location_form = LocationForm() # Display location box for user to type into
+
+			live_update_list = LiveUpdate.objects.all().order_by('date_time') # Display live update list
+
+			friend_update_list = FriendUpdate.objects.filter(receiver=user).order_by('date_time') # Display friend update list
+
+			friend_request_list = FriendRequest.objects.filter(receiver=user).order_by('-date_time') # Display friend request list
+
+			friend_list = person.friends.all() # Display all friends list
+
+			addfriend_indicator = 0 # Help decide the status of the add friend button
+			person_2 = Person.objects.filter(user=stalker)[0]
+			if (person_2 in friend_list):
+				addfriend_indicator = 2 # stalker and user whose profile being shown are friends
+			else:
+				relevant_request = FriendRequest.objects.filter(sender=stalker,receiver=user)
+				if len(relevant_request) == 0:
+					addfriend_indicator = 0 # stalker has not added user whose profile is being shown as a friend
+				else:
+					addfriend_indicator = 1 # stalker has added user whose profile is being shown as a friend
+
+			return render(request, 'mugspot/userprofile_edit.html', {
+					'live_update_list':live_update_list,
+					'friend_update_list': friend_update_list,
+					'location_form': location_form,
+					'account_form': account_form,
+					'friend_list': friend_list,
+					'friend_request_list': friend_request_list,
+					'user_prof': user,
+					'stalker': stalker,
+					'user_indicator': user_indicator,
+					'addfriend_indicator': addfriend_indicator,
+				})
 	
